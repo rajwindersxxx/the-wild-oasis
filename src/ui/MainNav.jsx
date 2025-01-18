@@ -64,6 +64,12 @@ function MainNav() {
           </StyledNavLink>
         </li>
         <li>
+          <StyledNavLink to="/guests">
+            <HiOutlineUsers />
+            Guests
+          </StyledNavLink>
+        </li>
+        <li>
           <StyledNavLink to="/bookings">
             <HiOutlineCalendarDays />
             Bookings
