@@ -35,16 +35,7 @@ function BookingTable() {
           <Pagination count={count} />
         </Table.Footer>
       </Table>
-      <Modal>
-        <Modal.Open opens={'createBooking'}>
-          <div>
-            <Button>Create a Booking</Button>
-          </div>
-        </Modal.Open>
-        <Modal.Window name={'createBooking'}>
-          <div>create booking form</div>
-        </Modal.Window>
-      </Modal>
+      
     </Menus>
   );
 }

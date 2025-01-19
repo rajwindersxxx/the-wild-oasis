@@ -1,13 +1,19 @@
 /* eslint-disable react/prop-types */
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const StyledFormRow = styled.div`
   display: grid;
   align-items: center;
   grid-template-columns: 24rem 1fr 1.2fr;
   gap: 2.4rem;
-
   padding: 1.2rem 0;
+
+  ${(props) =>
+    props.$display === 'inline' &&
+    css`
+      display: inline-block;
+      padding: 1.2rem 0;
+    `}
 
   &:first-child {
     padding-top: 0;
@@ -19,6 +25,11 @@ const StyledFormRow = styled.div`
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-grey-100);
+    ${(props) =>
+    props.$display === 'inline' &&
+    css`
+      border: none;
+    `}
   }
 
   &:has(button) {
@@ -36,9 +47,9 @@ const Error = styled.span`
   font-size: 1.4rem;
   color: var(--color-red-700);
 `;
-function FormRow({ label, error, children }) {
+function FormRow({ label, error, children , display }) {
   return (
-    <StyledFormRow>
+    <StyledFormRow $display={display}>
       {label && <Label htmlFor={children.props.id}>{label}</Label>}
       {children}
       {error && <Error>{error}</Error>}

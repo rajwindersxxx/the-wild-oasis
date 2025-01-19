@@ -27,13 +27,23 @@ function Select({
   ...props
 }) {
   if (isLoading) return <SpinnerMini />;
+
   return (
     <StyledSelect value={value} onChange={onChange} {...props}>
-      {options?.map((option) => (
-        <option value={option[name]} key={uuid4()}>
-          {option[label]}
-        </option>
-      ))}
+      {name &&
+        label &&
+        options?.map((option) => (
+          <option value={option[name]} key={uuid4()}>
+            {option[label]}
+          </option>
+        ))}
+      {!name &&
+        !label &&
+        options?.map((option) => (
+          <option value={option.value || value} key={uuid4()}>
+            {option.label}
+          </option>
+        ))}
     </StyledSelect>
   );
 }

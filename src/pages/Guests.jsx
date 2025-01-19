@@ -1,3 +1,4 @@
+import AddGuest from '../features/guests/AddGuest';
 import GuestsTable from '../features/guests/GuestsTable';
 import Heading from '../ui/Heading';
 import Row from '../ui/Row';
@@ -5,10 +6,13 @@ import Row from '../ui/Row';
 function Guests() {
   return (
     <>
-      <Row type="horizontal">
+      <Row $type="horizontal">
         <Heading as="h1">All Guests</Heading>
       </Row>
-      <GuestsTable />
+      <Row $type="vertical">
+        <GuestsTable />
+        <AddGuest/>
+      </Row>
     </>
   );
 }

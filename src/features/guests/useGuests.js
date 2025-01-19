@@ -14,19 +14,19 @@ export function useGuests() {
     error,
   } = useQuery({
     queryKey: ['guests', page],
-    queryFn: () => getGuests({ page }),
+    queryFn: () => getGuests(page),
   });
-  
+
   const pageCount = Math.ceil(count / PAGE_SIZE);
   if (page < pageCount)
     queryClient.prefetchQuery({
       queryKey: ['guests', page + 1],
-      queryFn: () => getGuests({ page: page + 1 }),
+      queryFn: () => getGuests(page + 1),
     });
   if (page > 1)
     queryClient.prefetchQuery({
       queryKey: ['guest', page - 1],
-      queryFn: () => getGuests({ page: page - 1 }),
+      queryFn: () => getGuests(page - 1),
     });
   return { isLoading, guests, count, error };
 }

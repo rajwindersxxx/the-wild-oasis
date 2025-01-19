@@ -1,6 +1,6 @@
 import supabase from './supabase';
 import { PAGE_SIZE } from '../utils/constants';
-export async function getGuests({ page }) {
+export async function getGuests(page) {
   let query = supabase
     .from('guests')
     .select('*, bookings(status, id)', { count: 'exact' });
@@ -15,6 +15,7 @@ export async function getGuests({ page }) {
     console.error(error);
     throw new Error('Guests could not be loaded');
   }
+  console.log(data);
   return { data, count };
 }
 
@@ -23,7 +24,9 @@ export async function createGuest(guestData) {
     ...guestData,
     countryFlag: `https://flagcdn.com/${guestData.countryCode.toLowerCase()}.svg`,
   };
-  const { data, error } = await supabase.from('guests').insert([createGuestEntry]);
+  const { data, error } = await supabase
+    .from('guests')
+    .insert([createGuestEntry]);
   if (error) {
     console.error(error);
     throw new Error('Guests could not be created');
