@@ -3,23 +3,24 @@ import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
 import Form from '../../ui/Form';
 import Button from '../../ui/Button';
-import FileInput from '../../ui/FileInput';
-import Textarea from '../../ui/Textarea';
 
 import { useForm } from 'react-hook-form';
 import { useCreateGuest } from './useCreateGuest';
+import Select from '../../ui/Select';
+import { useCountries } from './useCountries';
 
 function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
   const { createGuest, isCreating } = useCreateGuest();
+  const { countriesList, isLoading } = useCountries();
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
   const { register, handleSubmit, reset, getValues, formState } = useForm({
     defaultValues: isEditSession ? editValues : {},
   });
   const { errors } = formState;
-  console.log(errors);
 
   function onSubmit(data) {
+    console.log(data)
     createGuest(data, {
       onSuccess: () => {
         reset();
@@ -73,27 +74,27 @@ function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
       </FormRow>
 
       <FormRow label="Nationality" error={errors?.nationality?.message}>
-        <Input
-          type="text"
+        <Select
           id="nationality"
+          label="countryName"
+          name="countryName"
+          isLoading={isLoading}
           disabled={isCreating}
+          options={countriesList?.data}
           {...register('nationality', {
-            required: 'This field is required',
+            required: true,
           })}
         />
       </FormRow>
       <FormRow label="Country Code" error={errors?.countryCode?.message}>
-        <Input
-          type="text"
+        <Select
           id="countryCode"
+          name="countryCode"
+          label="countryCode"
+          isLoading={isLoading}
           disabled={isCreating}
-          {...register('countryCode', {
-            required: 'This field is required',
-            maxLength: {
-              value: 3,
-              message: 'Country code less then 3 characters',
-            },
-          })}
+          options={countriesList?.data}
+          {...register('countryCode', { required: true })}
         />
       </FormRow>
       <FormRow>

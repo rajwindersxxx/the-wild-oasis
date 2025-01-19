@@ -15,7 +15,6 @@ export async function getGuests({ page }) {
     console.error(error);
     throw new Error('Guests could not be loaded');
   }
-  console.log(count);
   return { data, count };
 }
 

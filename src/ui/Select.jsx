@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
 import styled from 'styled-components';
+import SpinnerMini from './SpinnerMini';
+import uuid4 from 'uuid4';
 
 const StyledSelect = styled.select`
   font-size: 1.4rem;
@@ -15,12 +17,21 @@ const StyledSelect = styled.select`
   box-shadow: var(--shadow-sm);
 `;
 
-function Select({ options, value, onChange, ...props }) {
+function Select({
+  options,
+  value,
+  name,
+  label,
+  isLoading,
+  onChange,
+  ...props
+}) {
+  if (isLoading) return <SpinnerMini />;
   return (
     <StyledSelect value={value} onChange={onChange} {...props}>
-      {options.map((option) => (
-        <option value={option.value} key={option.value}>
-          {option.label}
+      {options?.map((option) => (
+        <option value={option[name]} key={uuid4()}>
+          {option[label]}
         </option>
       ))}
     </StyledSelect>
