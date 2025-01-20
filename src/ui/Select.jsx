@@ -20,8 +20,9 @@ const StyledSelect = styled.select`
 function Select({
   options,
   value,
-  name,
+  optionValue,
   label,
+  detail,
   isLoading,
   onChange,
   ...props
@@ -30,17 +31,18 @@ function Select({
 
   return (
     <StyledSelect value={value} onChange={onChange} {...props}>
-      {name &&
+      <option value="">Select</option>
+      {optionValue &&
         label &&
-        options?.map((option) => (
-          <option value={option[name]} key={uuid4()}>
-            {option[label]}
+        options.map((option) => (
+          <option value={option[optionValue]} key={option[optionValue]}>
+            {option[label]} {detail && option[detail]}
           </option>
         ))}
-      {!name &&
+      {!optionValue &&
         !label &&
-        options?.map((option) => (
-          <option value={option.value || value} key={uuid4()}>
+        options.map((option) => (
+          <option value={option.value} key={option.value}>
             {option.label}
           </option>
         ))}

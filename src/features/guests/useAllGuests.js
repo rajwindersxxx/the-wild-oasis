@@ -1,8 +1,6 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getGuests } from '../../services/apiGuests';
-import { useSearchParams } from 'react-router-dom';
 export function useAllGuests() {
-
   const {
     isLoading,
     data: { data: guests } = {},
@@ -11,6 +9,5 @@ export function useAllGuests() {
     queryKey: ['guests'],
     queryFn: () => getGuests(),
   });
-  console.log(guests)
   return { isLoading, guests, error };
 }

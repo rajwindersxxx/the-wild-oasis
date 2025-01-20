@@ -20,7 +20,6 @@ export async function getBookings({ filter, sortBy, page }) {
     const from = (page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE - 1;
     query = query.range(from, to);
-
   }
   const { data, error, count } = await query;
 
@@ -64,7 +63,6 @@ export async function getBookingsAfterDate(date) {
 
 // Returns all STAYS that are were created after the given date
 export async function getStaysAfterDate(date) {
-  console.log(date)
   const { data, error } = await supabase
     .from('bookings')
     .select('*, guests(fullName)')
@@ -100,12 +98,14 @@ export async function getStaysTodayActivity() {
   return data;
 }
 
-export async function createBooking(id, obj){
-  const {data, error} = await supabase.from('booking')
+export async function createBooking(newBooking) {
+  const { data, error } = await supabase
+    .from('booking')
+    .insert({ ...newBooking });
+  return { data, error };
 }
 
 export async function updateBooking(id, obj) {
-
   const { data, error } = await supabase
     .from('bookings')
     .update(obj)
@@ -129,4 +129,26 @@ export async function deleteBooking(id) {
     throw new Error('Booking could not be deleted');
   }
   return data;
+}
+
+export async function getBusyBookings(bookingStartDate, bookingEndDate) {
+  if (!bookingStartDate || !bookingEndDate)
+    return { message: 'provide start and end Date' };
+  const { data: cabinList, error } = await supabase
+    .from('bookings')
+    .select('cabins(name)')
+    .lte('startDate', `${bookingEndDate} 00:00:00`)
+    .gte('startDate', `bookingStartDate`)
+    .lte('endDate', `${bookingEndDate} 00:00:00`)
+    .gte('endDate', `bookingStartDate`)
+    .or('status.neq.checked-out');
+
+  const allEntries = cabinList.map((data) => data.cabins.name);
+  const data = [...new Set(allEntries)];
+  if (error) {
+    console.error(error);
+    throw new Error('Bookings could not be loaded');
+  }
+  console.log(data);
+  return { data, error };
 }

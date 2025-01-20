@@ -5,8 +5,7 @@ import Empty from '../../ui/Empty';
 import Spinner from '../../ui/Spinner';
 import { useBookings } from './useBookings';
 import Pagination from '../../ui/Pagination';
-import Button from '../../ui/Button';
-import Modal from '../../ui/Modal';
+
 
 function BookingTable() {
   const { bookings, isLoading, count } = useBookings();

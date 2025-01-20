@@ -11,88 +11,108 @@ import { useCabins } from '../cabins/useCabins';
 import { useAllGuests } from '../guests/useAllGuests';
 import Checkbox from '../../ui/Checkbox';
 import Textarea from '../../ui/Textarea';
-
+import Table from '../../ui/Table';
+import CabinRow from '../cabins/CabinRow';
+import CreateCabinDetail from '../../ui/CreateCabinDetail';
+import { useGetFetchQuery } from '../../hooks/useGetFetchQuery';
+import { useEffect, useState } from 'react';
+import CreateGuestDetail from '../../ui/CreateGuestDetail';
 function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
-  const {isLoading: isLoadingCabins  , cabins} = useCabins();
-  const {isLoading: isLoadingGuest  , guests} = useAllGuests();
+  const [selectedCabin, setSelectedCabin] = useState([]);
+  const [selectedGuest, setSelectedGuest] = useState([]);
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
-  const { register, handleSubmit, reset, getValues, formState } = useForm({
-    defaultValues: isEditSession ? editValues : {},
-  });
-  const { errors } = formState;
 
-  function onSubmit(data) {}
-  function onError(errors) {
-    // console.log(errors);
+  const { register, handleSubmit, reset, getValues, formState, watch } =
+    useForm({
+      defaultValues: isEditSession ? editValues : {},
+    });
+
+  const { isLoading: isLoadingCabins, cabins } = useCabins();
+  const { isLoading: isLoadingGuests, guests } = useAllGuests();
+  const [cabinId, guestId] = watch(['cabinId', 'guestId']);
+
+  const cabinData = useGetFetchQuery(['cabins']);
+  const guestData = useGetFetchQuery(['guests']);
+  const { errors } = formState;
+  useEffect(() => {
+    const selectedCabin = cabinData?.filter((data) => data.name === cabinId);
+    setSelectedCabin(selectedCabin);
+  }, [cabinId, cabinData]);
+
+  useEffect(() => {
+    const selectedGuest = guestData?.data.filter(
+      (data) => data.id === Number(guestId)
+    );
+    setSelectedGuest(selectedGuest);
+    console.log(selectedGuest);
+  }, [guestId, guestData]);
+
+  function onSubmit(data) {
+    console.log(data);
   }
+  function onError(errors) {
+    console.log(errors);
+  }
+
   return (
     <Form
       onSubmit={handleSubmit(onSubmit, onError)}
       type={onCloseModal ? 'modal' : 'regular'}
     >
-        <FormRow
-          label="Start Date"
-          error={errors?.starDate?.message}
-        >
-          <Input
-            type="date"
-            id="startDate"
-            {...register('startDate', {
-              required: 'This field is required',
-            })}
-          />
-        </FormRow>
-        <FormRow label={'endDate'} error={errors?.endDate?.message} >
-          <Input
-            type="date"
-            id="endDate"
-            {...register('endDate', {
-              required: 'This field is required',
-            })}
-          />
-        </FormRow>
-      
+      <FormRow label="Start Date" error={errors?.starDate?.message}>
+        <Input
+          type="date"
+          id="startDate"
+          {...register('startDate', {
+            required: 'This field is required',
+          })}
+        />
+      </FormRow>
+      <FormRow label={'endDate'} error={errors?.endDate?.message}>
+        <Input
+          type="date"
+          id="endDate"
+          {...register('endDate', {
+            required: 'This field is required',
+          })}
+        />
+      </FormRow>
+
       <FormRow label="Select Cabin" error={errors?.cabinId?.message}>
         <Select
           id="cabinId"
           options={cabins}
-          name="name"
           label="name"
+          optionValue="name"
           isLoading={isLoadingCabins}
           {...register('cabinId', { required: true })}
         />
       </FormRow>
+      <CreateCabinDetail cabins={selectedCabin} />
       <FormRow label="Select Guest" error={errors?.guestId?.message}>
         <Select
           id="guestId"
           options={guests}
-          name="fullName"
+          optionValue="id"
           label="fullName"
-          isLoading={isLoadingGuest}
-
+          isLoading={isLoadingGuests}
           {...register('guestId', { required: true })}
         />
       </FormRow>
-      <FormRow label="No. of Guests" error={errors?.numGuest?.message}>
-        <Input
-          type="number"
-          id="endDate"
-          {...register('numGuest', {
-            required: 'This field is required',
-          })}
-        />
+      <CreateGuestDetail guests={selectedGuest} />
+      <FormRow
+        label="Breakfast included?"
+        error={errors?.hasBreakfast?.message}
+      >
+        <Checkbox id="hasBreakfast" {...register('hasBreakfast')} />
       </FormRow>
-      <FormRow label="Breakfast included?" error={errors?.hasBreakfast?.message}>
-        <Checkbox
-          {...register('hasBreakfast', {
-            required: 'This field is required',
-          })}
-        />
+      <FormRow label="Payment done?" error={errors?.isPaid?.message}>
+        <Checkbox id="isPaid" {...register('isPaid')} />
       </FormRow>
       <FormRow
         label={'Description (optional)'}
-        error={errors?.description?.message}
+        error={errors?.observation?.message}
       >
         <Textarea
           type="number"
@@ -102,7 +122,6 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
         />
       </FormRow>
       <FormRow>
-        {/* type is an HTML attribute! */}
         <Button
           $variation="secondary"
           type="reset"

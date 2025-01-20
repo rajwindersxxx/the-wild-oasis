@@ -1,4 +1,4 @@
-import { formatDistance, parseISO } from 'date-fns';
+import { format, formatDistance, parse, parseISO, startOfDay } from 'date-fns';
 import { differenceInDays } from 'date-fns';
 
 // We want to make this function work for both Date objects and strings (which come from Supabase)
@@ -28,3 +28,14 @@ export const formatCurrency = (value) =>
   new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(
     value
   );
+
+export function formatToMidnight(dateString) {
+  // Parse the date string into a Date object
+  const parsedDate = parse(dateString, 'yyyy-MM-dd', new Date());
+
+  // Set the time to midnight (00:00:00) using startOfDay
+  const midnightDate = startOfDay(parsedDate);
+
+  // Format the date to 'YYYY-MM-DD 00:00:00'
+  return format(midnightDate, 'yyyy-MM-dd HH:mm:ss');
+}

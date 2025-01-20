@@ -17,7 +17,7 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'no-unused-vars': ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: true }],
-    'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
-    'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
+    'react-hooks/rules-of-hooks': 'error', 
+    'react-hooks/exhaustive-deps': 'warn', 
   },
 };
