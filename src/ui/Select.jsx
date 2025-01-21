@@ -35,14 +35,17 @@ function Select({
       {optionValue &&
         label &&
         options.map((option) => (
-          <option value={option[optionValue]} key={option[optionValue]}>
+          <option
+            value={option[optionValue]}
+            key={`${option[optionValue]}-${option[label]}`}
+          >
             {option[label]} {detail && option[detail]}
           </option>
         ))}
       {!optionValue &&
         !label &&
         options.map((option) => (
-          <option value={option.value} key={option.value}>
+          <option value={option.value} key={`${option.value}-${option.label}`}>
             {option.label}
           </option>
         ))}

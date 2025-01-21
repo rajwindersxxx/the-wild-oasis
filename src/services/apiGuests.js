@@ -32,3 +32,7 @@ export async function createGuest(guestData) {
   }
   return { data, error };
 }
+export async function getAllGuests() {
+  const { data, error } = await supabase.from('guests').select('*');
+  return { data, error };
+}

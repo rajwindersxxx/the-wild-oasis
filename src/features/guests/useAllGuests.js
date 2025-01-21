@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { getGuests } from '../../services/apiGuests';
+import { getAllGuests } from '../../services/apiGuests';
 export function useAllGuests() {
   const {
     isLoading,
     data: { data: guests } = {},
     error,
   } = useQuery({
-    queryKey: ['guests'],
-    queryFn: () => getGuests(),
+    queryKey: ['allGuests'],
+    queryFn: () => getAllGuests(),
   });
   return { isLoading, guests, error };
 }

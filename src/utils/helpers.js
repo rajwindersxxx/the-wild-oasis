@@ -39,3 +39,9 @@ export function formatToMidnight(dateString) {
   // Format the date to 'YYYY-MM-DD 00:00:00'
   return format(midnightDate, 'yyyy-MM-dd HH:mm:ss');
 }
+
+export function getNoOfDays(startDate, endDate){
+  const d1 = new Date(startDate).getTime();
+  const d2 = new Date(endDate).getTime();
+  return d2 - d1
+}

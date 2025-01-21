@@ -11,45 +11,47 @@ import { useCabins } from '../cabins/useCabins';
 import { useAllGuests } from '../guests/useAllGuests';
 import Checkbox from '../../ui/Checkbox';
 import Textarea from '../../ui/Textarea';
-import Table from '../../ui/Table';
-import CabinRow from '../cabins/CabinRow';
-import CreateCabinDetail from '../../ui/CreateCabinDetail';
-import { useGetFetchQuery } from '../../hooks/useGetFetchQuery';
-import { useEffect, useState } from 'react';
-import CreateGuestDetail from '../../ui/CreateGuestDetail';
+import { eachDayOfInterval } from 'date-fns';
+import { useSettings } from '../settings/useSettings';
+import SelectedGuestDetails from './SelectedGuestDetails';
+import SelectedCabinDetails from './SelectedCabinDetails';
+import { useCreateBooking } from './useCreateBooking';
 function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
-  const [selectedCabin, setSelectedCabin] = useState([]);
-  const [selectedGuest, setSelectedGuest] = useState([]);
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
-
+  const { isLoading: isLoadingCabins, cabins } = useCabins();
+  const { isLoading: isLoadingGuests, guests } = useAllGuests();
+  const { createBooking, isCreating } = useCreateBooking()
+  const { settings } = useSettings();
   const { register, handleSubmit, reset, getValues, formState, watch } =
     useForm({
       defaultValues: isEditSession ? editValues : {},
     });
+  const { errors } = formState;
 
-  const { isLoading: isLoadingCabins, cabins } = useCabins();
-  const { isLoading: isLoadingGuests, guests } = useAllGuests();
   const [cabinId, guestId] = watch(['cabinId', 'guestId']);
 
-  const cabinData = useGetFetchQuery(['cabins']);
-  const guestData = useGetFetchQuery(['guests']);
-  const { errors } = formState;
-  useEffect(() => {
-    const selectedCabin = cabinData?.filter((data) => data.name === cabinId);
-    setSelectedCabin(selectedCabin);
-  }, [cabinId, cabinData]);
-
-  useEffect(() => {
-    const selectedGuest = guestData?.data.filter(
-      (data) => data.id === Number(guestId)
-    );
-    setSelectedGuest(selectedGuest);
-    console.log(selectedGuest);
-  }, [guestId, guestData]);
-
   function onSubmit(data) {
-    console.log(data);
+    const selectedCabin = cabins.filter((cabin) => (cabin.id = cabinId));
+    const datesBetween = eachDayOfInterval({
+      start: new Date(data.startDate),
+      end: new Date(data.endDate),
+    });
+    const cabinPrice =
+      selectedCabin[0].regularPrice * datesBetween.length -
+      selectedCabin[0].discount;
+    const extraPrice = data.hasBreakfast
+      ? settings.breakfastPrice * datesBetween.length
+      : 0;
+    const newObject = {
+      numNights: datesBetween.length,
+      numGuests: selectedCabin[0].maxCapacity,
+      cabinPrice: cabinPrice,
+      extrasPrice: extraPrice,
+      totalPrice: cabinPrice + extraPrice,
+    };
+    const finalData = { ...data, ...newObject };
+    createBooking(finalData)
   }
   function onError(errors) {
     console.log(errors);
@@ -84,12 +86,12 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
           id="cabinId"
           options={cabins}
           label="name"
-          optionValue="name"
+          optionValue="id"
           isLoading={isLoadingCabins}
           {...register('cabinId', { required: true })}
         />
       </FormRow>
-      <CreateCabinDetail cabins={selectedCabin} />
+      <SelectedCabinDetails filterBy={'id'} eqTo={Number(cabinId)} />
       <FormRow label="Select Guest" error={errors?.guestId?.message}>
         <Select
           id="guestId"
@@ -100,7 +102,7 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
           {...register('guestId', { required: true })}
         />
       </FormRow>
-      <CreateGuestDetail guests={selectedGuest} />
+      <SelectedGuestDetails filterBy="id" eqTo={Number(guestId)} />
       <FormRow
         label="Breakfast included?"
         error={errors?.hasBreakfast?.message}
@@ -116,9 +118,9 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
       >
         <Textarea
           type="number"
-          id="observation"
+          id="observations"
           defaultValue=""
-          {...register('observation')}
+          {...register('observations')}
         />
       </FormRow>
       <FormRow>

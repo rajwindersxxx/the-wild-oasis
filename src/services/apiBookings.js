@@ -45,6 +45,17 @@ export async function getBooking(id) {
   return data;
 }
 
+export async function createBooking(newBooking) {
+  console.log(newBooking)
+  const { data, error } = await supabase
+    .from('bookings')
+    .insert(newBooking);
+    if (error) {
+      console.error(error);
+      throw new Error('Bookings could not added');
+    }
+  return { data, error };
+}
 // Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.
 // date: should be iso
 export async function getBookingsAfterDate(date) {
@@ -98,12 +109,7 @@ export async function getStaysTodayActivity() {
   return data;
 }
 
-export async function createBooking(newBooking) {
-  const { data, error } = await supabase
-    .from('booking')
-    .insert({ ...newBooking });
-  return { data, error };
-}
+
 
 export async function updateBooking(id, obj) {
   const { data, error } = await supabase
