@@ -3,7 +3,7 @@ import { getCountries } from '../../services/apiOther';
 
 export function useCountries() {
   const {
-    data: countriesList,
+    data: {data: countriesList = []} = {},
     isLoading,
     error,
   } = useQuery({

@@ -1,14 +1,15 @@
 import Button from '../../ui/Button';
 import Modal from '../../ui/Modal';
+import Row from '../../ui/Row';
 import CreateBookingForm from './CreateBookingForm';
 
 function AddBooking() {
   return (
     <Modal>
       <Modal.Open opens={'createBooking'}>
-        <div>
+        <Row $type='flex-end'>
           <Button>Create a Booking</Button>
-        </div>
+        </Row>
       </Modal.Open>
       <Modal.Window name={'createBooking'}>
         <CreateBookingForm/>

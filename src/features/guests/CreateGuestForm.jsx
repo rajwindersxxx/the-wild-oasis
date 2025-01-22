@@ -77,10 +77,11 @@ function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
         <Select
           id="nationality"
           label="countryName"
-          name="countryName"
+          optionValue="countryName"
           isLoading={isLoading}
           disabled={isCreating}
-          options={countriesList?.data}
+          options={countriesList}
+          placeHolder='Select a Country'
           {...register('nationality', {
             required: true,
           })}
@@ -89,11 +90,12 @@ function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
       <FormRow label="Country Code" error={errors?.countryCode?.message}>
         <Select
           id="countryCode"
-          name="countryCode"
+          optionValue="countryCode"
           label="countryCode"
           isLoading={isLoading}
           disabled={isCreating}
-          options={countriesList?.data}
+          options={countriesList}
+          placeHolder='Select a Country Code'
           {...register('countryCode', { required: true })}
         />
       </FormRow>

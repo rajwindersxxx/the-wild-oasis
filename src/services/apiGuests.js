@@ -4,7 +4,6 @@ export async function getGuests({ filter, sortBy, page }) {
   let query = supabase
     .from('guests')
     .select('*, bookings(status, id)', { count: 'exact' });
-  console.log(filter);
   // filter
   if (filter) query = query[filter.method || 'eq'](filter.field, filter.value);
 
@@ -27,7 +26,7 @@ export async function getGuests({ filter, sortBy, page }) {
   return { data, count };
 }
 
-export async function createGuest(guestData) {
+export async function createEditGuest(guestData) {
   const createGuestEntry = {
     ...guestData,
     countryFlag: `https://flagcdn.com/${guestData.countryCode.toLowerCase()}.svg`,

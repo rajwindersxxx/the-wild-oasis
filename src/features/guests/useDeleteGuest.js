@@ -7,7 +7,7 @@ export function useDeleteGuest() {
   const { mutate: deleteGuest, isLoading: isDeleting } = useMutation({
     mutationFn: deleteGuestApi,
     onSuccess: () => {
-      toast.success('New guest successfully created');
+      toast.success('Guest Deleted Successfully');
       queryClient.invalidateQueries({ queryKey: ['guests'] });
     },
     onError: (err) => toast.error(err.message),
