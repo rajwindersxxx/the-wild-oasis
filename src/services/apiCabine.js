@@ -2,7 +2,6 @@ import supabase, { supabaseUrl } from './supabase';
 
 export async function getCabins() {
   let query = supabase.from('cabins').select('*');
-  // if (name) query = query.eq('name', name).single();
   const { data, error } = await query;
   if (error) {
     console.error(error);

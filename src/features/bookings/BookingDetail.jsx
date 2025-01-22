@@ -42,7 +42,6 @@ function BookingDetail() {
     'checked-out': 'silver',
   };
   if (isLoading) return <Spinner />;
-  console.log(booking)
   if (!booking.id) return <Empty resourceName="booking" />;
   return (
     <>

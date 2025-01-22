@@ -1,18 +1,16 @@
 /* eslint-disable react/prop-types */
 import uuid4 from 'uuid4';
-import { useGetFetchQuery } from '../../hooks/useGetFetchQuery';
 import { Flag } from '../../ui/Flag';
 import Menus from '../../ui/Menus';
 import SpinnerMini from '../../ui/SpinnerMini';
 import Table from '../../ui/Table';
 import { useEffect, useState } from 'react';
 
-function SelectedGuestDetails({ filterBy, eqTo }) {
-  const guests = useGetFetchQuery(['allGuests']);
+function SelectedGuestDetails({ filterBy, eqTo, guests }) {
   const [selectedGuest, setSelectedGuest] = useState([]);
   useEffect(() => {
-    if (!guests?.data) return;
-    const selectedGuest = guests?.data?.filter(
+    if (!guests) return;
+    const selectedGuest = guests.filter(
       (data) => data[filterBy] === eqTo
     );
     return setSelectedGuest(selectedGuest);
@@ -21,7 +19,14 @@ function SelectedGuestDetails({ filterBy, eqTo }) {
   if (!guests) return <SpinnerMini />;
   return (
     <Menus>
-      <Table columns=" 1fr 1fr 1fr 1fr 0.1fr ">
+      <Table columns=" 1fr 1fr 1fr 1fr 0.5fr ">
+              <Table.Header>
+                <div>Guest Name</div>
+                <div>Email</div>
+                <div>NationalId</div>
+                <div>Nationality</div>
+                <div>Flag</div>
+              </Table.Header>
         <Table.Body
           data={selectedGuest}
           render={(guest) => <SelectedGuestRow guest={guest} key={uuid4()} />}
@@ -33,7 +38,6 @@ function SelectedGuestDetails({ filterBy, eqTo }) {
 
 function SelectedGuestRow({ guest }) {
   const {
-    id: guestId,
     fullName,
     email,
     nationalID,
@@ -42,7 +46,6 @@ function SelectedGuestRow({ guest }) {
   } = guest;
   return (
     <Table.Row>
-      {/* <div>{bookingId}</div> */}
       <div>{fullName}</div>
       <div>{email}</div>
       <div>{nationalID}</div>

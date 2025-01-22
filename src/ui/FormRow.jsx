@@ -26,10 +26,10 @@ const StyledFormRow = styled.div`
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-grey-100);
     ${(props) =>
-    props.$display === 'inline' &&
-    css`
-      border: none;
-    `}
+      props.$display === 'inline' &&
+      css`
+        border: none;
+      `}
   }
 
   &:has(button) {
@@ -47,13 +47,23 @@ const Error = styled.span`
   font-size: 1.4rem;
   color: var(--color-red-700);
 `;
-function FormRow({ label, error, children , display }) {
+const Message = styled.p`
+   font-size: 1.4rem;
+   color: var(--color-green-700);
+   text-align: center;
+   grid-row-start: 2;
+   grid-column-start: 2;
+`;
+function FormRow({ label, error, message, children, display }) {
   return (
-    <StyledFormRow $display={display}>
-      {label && <Label htmlFor={children.props.id}>{label}</Label>}
-      {children}
-      {error && <Error>{error}</Error>}
-    </StyledFormRow>
+    <>
+      <StyledFormRow $display={display}>
+        {label && <Label htmlFor={children.props.id}>{label}</Label>}
+        {children}
+        {error && <Error>{error}</Error>}
+        {message && <Message>{message}</Message>}
+      </StyledFormRow>
+    </>
   );
 }
 

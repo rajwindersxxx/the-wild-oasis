@@ -30,6 +30,24 @@ export async function getBookings({ filter, sortBy, page }) {
   return { data, count };
 }
 
+export async function getFilteredBooking(id) {
+  try {
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .eq('cabinId', id)
+      .neq('status', 'checked-out');
+    if (error) {
+      console.error('Error fetching booking:', error);
+      throw new Error('Booking not found');
+    }
+
+    return data;
+  } catch (err) {
+    return { message: 'select cabin' };
+  }
+}
+
 export async function getBooking(id) {
   const { data, error } = await supabase
     .from('bookings')
@@ -44,16 +62,14 @@ export async function getBooking(id) {
 
   return data;
 }
-
 export async function createBooking(newBooking) {
-  console.log(newBooking)
-  const { data, error } = await supabase
-    .from('bookings')
-    .insert(newBooking);
-    if (error) {
-      console.error(error);
-      throw new Error('Bookings could not added');
-    }
+  console.log(newBooking);
+  const { data, error } = await supabase.from('bookings').insert(newBooking);
+  if (error) {
+    console.error(error);
+    throw new Error('Bookings could not added');
+  }
+  console.log(data)
   return { data, error };
 }
 // Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.
@@ -108,8 +124,6 @@ export async function getStaysTodayActivity() {
   }
   return data;
 }
-
-
 
 export async function updateBooking(id, obj) {
   const { data, error } = await supabase

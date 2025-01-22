@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
-import { useGetFetchQuery } from '../../hooks/useGetFetchQuery';
 import Menus from '../../ui/Menus';
 import SpinnerMini from '../../ui/SpinnerMini';
 import Table from '../../ui/Table';
@@ -35,8 +34,7 @@ const Discount = styled.div`
   color: var(--color-green-700);
 `;
 
-function SelectedCabinDetails({ filterBy, eqTo }) {
-  const cabins = useGetFetchQuery(['cabins']);
+function SelectedCabinDetails({ filterBy, eqTo , cabins}) {
   const [selectedCabin, setSelectedCabin] = useState([]);
   useEffect(() => {
     if (!cabins) return;
@@ -47,7 +45,14 @@ function SelectedCabinDetails({ filterBy, eqTo }) {
 
   return (
     <Menus>
-      <Table columns=" 1fr 1fr 1fr 1fr 0.1fr ">
+      <Table columns=" 1fr 1fr 1fr 1fr 0.5fr ">
+        <Table.Header>
+        <div></div>
+          <div>Cabin Name</div>
+          <div>Capacity</div>
+          <div>Price</div>
+          <div>Discount</div>
+        </Table.Header>
         <Table.Body
           data={selectedCabin}
           render={(cabin) => <SelectedCabinRow cabin={cabin} key={uuid4()} />}
