@@ -32,15 +32,18 @@ function Select({
 
   return (
     <StyledSelect value={value} onChange={onChange} {...props}>
-    {placeHolder &&  <option value="">{placeHolder}</option>}
+      {placeHolder && <option value="">{placeHolder}</option>}
       {optionValue &&
         label &&
         options.map((option) => (
           <option
             value={option[optionValue]}
+            // value={`${option[optionValue]}${
+            //   detail ? `-${option[detail]}` : ''
+            // }`}
             key={`${option[optionValue]}-${option[label]}`}
           >
-            {option[label]} {detail && option[detail]}
+            {option[label]} {detail && `(${option[detail]})`}
           </option>
         ))}
       {!optionValue &&

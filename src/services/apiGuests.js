@@ -26,18 +26,23 @@ export async function getGuests({ filter, sortBy, page }) {
   return { data, count };
 }
 
-export async function createEditGuest(guestData) {
+export async function createEditGuest(guestData, id) {
+  console.log(guestData)
   const createGuestEntry = {
     ...guestData,
     countryFlag: `https://flagcdn.com/${guestData.countryCode.toLowerCase()}.svg`,
   };
-  const { data, error } = await supabase
-    .from('guests')
-    .insert([createGuestEntry]);
+  let query = supabase.from('guests');
+
+  if (!id) query = query.insert([createGuestEntry]);
+  if (id) query = query.update([createGuestEntry]).eq('id', id);
+
+  const { data, error } = await query.select().single();
   if (error) {
     console.error(error);
     throw new Error('Guests could not be created');
   }
+
   return { data, error };
 }
 export async function getAllGuests() {

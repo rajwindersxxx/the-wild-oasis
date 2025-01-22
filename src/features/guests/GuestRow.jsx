@@ -7,6 +7,8 @@ import Tag from '../../ui/Tag';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 import { useDeleteGuest } from './useDeleteGuest';
 import { useNavigate } from 'react-router-dom';
+import CreateCabinForm from '../cabins/CreateCabinForm';
+import CreateGuestForm from './CreateGuestForm';
 
 /* eslint-disable react/prop-types */
 function GuestRow({ guest }) {
@@ -53,19 +55,24 @@ function GuestRow({ guest }) {
                 History
               </Menus.Button>
             )}
-            <Menus.Button
-              icon={<HiOutlinePencil />}
-              // onClick={() => navigate(`/checkin/${bookingId}`)}
-            >
-              Edit details
-            </Menus.Button>
-            {!status && (
+            <Modal.Open opens={'edit'}>
+              <Menus.Button
+                icon={<HiOutlinePencil />}
+                // onClick={() => navigate(`/checkin/${bookingId}`)}
+              >
+                Edit details
+              </Menus.Button>
+            </Modal.Open>
+            {bookingStatus.length === 0 && (
               <Modal.Open opens={'delete'}>
                 <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
               </Modal.Open>
             )}
           </Menus.List>
         </Menus.Menu>
+        <Modal.Window name={`edit`}>
+          <CreateGuestForm cabinToEdit={guest} />
+        </Modal.Window>
         <Modal.Window name={'delete'}>
           <ConfirmDelete
             resourceName={'Booking'}

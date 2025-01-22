@@ -8,27 +8,49 @@ import { useForm } from 'react-hook-form';
 import { useCreateGuest } from './useCreateGuest';
 import Select from '../../ui/Select';
 import { useCountries } from './useCountries';
+import { useUpdateGuest } from './useUpdateGuest';
 
 function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
   const { createGuest, isCreating } = useCreateGuest();
+  const { updateGuest, isUpdating } = useUpdateGuest();
+
+  const isWorking = isUpdating || isCreating;
   const { countriesList, isLoading } = useCountries();
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
-  const { register, handleSubmit, reset, getValues, formState } = useForm({
+  const { register, handleSubmit, reset, formState, watch } = useForm({
     defaultValues: isEditSession ? editValues : {},
   });
+  const [code] = watch(['countryCode']);
+  console.log(code);
   const { errors } = formState;
 
   function onSubmit(data) {
-    console.log(data)
-    createGuest(data, {
-      onSuccess: () => {
-        reset();
-        onCloseModal?.();
-      },
-    });
+    delete data.bookings;
+    if (isEditSession)
+      updateGuest(
+        {
+          newGuestData: {
+            ...data,
+          },
+          id: editId,
+        },
+        {
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
+        }
+      );
+    else
+      createGuest(data, {
+        onSuccess: () => {
+          reset();
+          onCloseModal?.();
+        },
+      });
   }
-  function onError(errors) {
+  function onError() {
     // console.log(errors);
   }
   return (
@@ -40,7 +62,7 @@ function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
         <Input
           type="text"
           id="fullName"
-          disabled={isCreating}
+          disabled={isWorking}
           {...register('fullName', {
             required: 'This field is required',
           })}
@@ -51,7 +73,7 @@ function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
         <Input
           type="text"
           id="email"
-          disabled={isCreating}
+          disabled={isWorking}
           {...register('email', {
             required: 'This field is required',
             pattern: {
@@ -66,7 +88,7 @@ function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
         <Input
           type="text"
           id="nationalID"
-          disabled={isCreating}
+          disabled={isWorking}
           {...register('nationalID', {
             required: 'This field is required',
           })}
@@ -78,10 +100,11 @@ function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
           id="nationality"
           label="countryName"
           optionValue="countryName"
+          detail="countryCode"
           isLoading={isLoading}
-          disabled={isCreating}
+          disabled={isWorking}
           options={countriesList}
-          placeHolder='Select a Country'
+          placeHolder="Select a Country"
           {...register('nationality', {
             required: true,
           })}
@@ -93,9 +116,9 @@ function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
           optionValue="countryCode"
           label="countryCode"
           isLoading={isLoading}
-          disabled={isCreating}
+          disabled={isWorking}
           options={countriesList}
-          placeHolder='Select a Country Code'
+          placeHolder="Select a Country Code"
           {...register('countryCode', { required: true })}
         />
       </FormRow>
@@ -105,11 +128,11 @@ function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
           $variation="secondary"
           type="reset"
           onClick={() => onCloseModal?.()}
-          disabled={isCreating}
+          disabled={isWorking}
         >
           Cancel
         </Button>
-        <Button disabled={isCreating}>
+        <Button disabled={isWorking}>
           {isEditSession ? 'Edit Guest' : 'Create new Guest'}
         </Button>
       </FormRow>
