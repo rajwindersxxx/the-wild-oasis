@@ -1,9 +1,7 @@
+import GuestBookingHistory from "../features/guests/GuestBookingHistory";
+
 function BookingHistory() {
-    return (
-        <div>
-            history
-        </div>
-    )
+  return <div><GuestBookingHistory/> </div>;
 }
 
-export default BookingHistory
+export default BookingHistory;

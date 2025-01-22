@@ -69,7 +69,7 @@ export async function createBooking(newBooking) {
     console.error(error);
     throw new Error('Bookings could not added');
   }
-  console.log(data)
+  console.log(data);
   return { data, error };
 }
 // Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.
@@ -126,7 +126,7 @@ export async function getStaysTodayActivity() {
 }
 
 export async function updateBooking(id, obj) {
-  console.log(id ,obj)
+  console.log(id, obj);
   const { data, error } = await supabase
     .from('bookings')
     .update(obj)
@@ -152,3 +152,19 @@ export async function deleteBooking(id) {
   return data;
 }
 
+export async function getBookingHistory(id) {
+  let query = supabase
+    .from('bookings')
+    .select(
+      '*, cabins(*) , guests(*)',
+      { count: 'exact' }
+    )
+    .eq('guestId', id);
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    throw new Error('Bookings history could not be loaded');
+  }
+  return { data, count };
+}

@@ -12,6 +12,7 @@ import DataItem from '../../ui/DataItem';
 import { Flag } from '../../ui/Flag';
 
 import { formatDistanceFromNow, formatCurrency } from '../../utils/helpers';
+import Tag from '../../ui/Tag';
 
 const StyledBookingDataBox = styled.section`
   /* Box */
@@ -104,7 +105,7 @@ const Footer = styled.footer`
   color: var(--color-grey-500);
   text-align: right;
   display: flex;
-  justify-content: space-between
+  justify-content: space-between;
 `;
 
 // A purely presentational component
@@ -193,8 +194,14 @@ function BookingDataBox({ booking }) {
         {checkInTime && (
           <p>Arrived on {format(new Date(checkInTime), 'EEE, MMM dd yyyy, p')}</p>
         )}
+        {!checkInTime && (
+          <Tag type='blue'> Active Booking</Tag>
+        )}
         {checkOutTime && (
           <p>Leave on {format(new Date(checkOutTime), 'EEE, MMM dd yyyy, p')}</p>
+        )}
+        {!checkOutTime && (
+          <Tag type='blue'> Active</Tag>
         )}
       </Footer>
     </StyledBookingDataBox>

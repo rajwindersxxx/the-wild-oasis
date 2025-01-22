@@ -49,7 +49,7 @@ function App() {
               <Route path="guests" element={<Guests />} />
               <Route path="bookings/:bookingId" element={<Booking />} />
               <Route path="checkin/:bookingId" element={<Checkin />} />
-              <Route path="bookingHistory/:bookingId" element={<BookingHistory />} />
+              <Route path="bookingHistory/:guestId" element={<BookingHistory />} />
               <Route path="cabins" element={<Cabins />} />
               <Route path="users" element={<Users />} />
               <Route path="settings" element={<Settings />} />

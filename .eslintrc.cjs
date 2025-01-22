@@ -19,6 +19,5 @@ module.exports = {
     'no-unused-vars': ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: true }],
     'react-hooks/rules-of-hooks': 'error', 
     'react-hooks/exhaustive-deps': 'warn', 
-    'no-console': 'warn',
   },
 };

@@ -3,12 +3,11 @@ import { PAGE_SIZE } from '../utils/constants';
 export async function getGuests({ filter, sortBy, page }) {
   let query = supabase
     .from('guests')
-    .select('*, bookings(status, id)', { count: 'exact' }).eq('bookings.status', 'checked-in');
-
+    .select('*, bookings(status, id)', { count: 'exact' });
+  console.log(filter);
   // filter
   if (filter) query = query[filter.method || 'eq'](filter.field, filter.value);
 
-  
   // Sorting
   if (sortBy)
     query = query.order(`${sortBy.field}`, {
@@ -20,7 +19,6 @@ export async function getGuests({ filter, sortBy, page }) {
     const to = from + PAGE_SIZE - 1;
     query = query.range(from, to);
   }
-
   const { data, error, count } = await query;
   if (error) {
     console.error(error);
@@ -48,7 +46,7 @@ export async function getAllGuests() {
   return { data, error };
 }
 
-export async function deleteGuest(id){
+export async function deleteGuest(id) {
   const { data, error } = await supabase.from('guests').delete().eq('id', id);
 
   if (error) {
@@ -56,5 +54,4 @@ export async function deleteGuest(id){
     throw new Error('Cabins could not be deleted');
   }
   return data;
-  
 }

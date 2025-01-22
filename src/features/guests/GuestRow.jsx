@@ -10,9 +10,13 @@ import { useNavigate } from 'react-router-dom';
 
 /* eslint-disable react/prop-types */
 function GuestRow({ guest }) {
-  const { deleteGuest, isDeleting } = useDeleteGuest();
+  const { deleteGuest } = useDeleteGuest();
   const navigate = useNavigate();
-  const status = guest?.bookings[0]?.status;
+  const bookingStatus = guest.bookings;
+
+  const isActiveBooking =
+    bookingStatus.filter((item) => item.status !== 'checked-out').length > 0;
+
   const {
     fullName,
     email,
@@ -29,20 +33,26 @@ function GuestRow({ guest }) {
       <div>{nationalID}</div>
       <div>{nationality}</div>
       <Flag src={countryFlag} alt={`Flag of ${nationality}`} />
-      {status === 'unconfirmed' && <Tag type="green">Arriving</Tag>}
-      {status === 'checked-in' && <Tag type="blue">Departing</Tag>}
-      {status === 'checked-out' && <Tag type="indigo">Checked out</Tag>}
-      {!status && <Tag type="yellow">no Booking</Tag>}
+
+      {isActiveBooking && <Tag type="green">active booking</Tag>}
+      {!isActiveBooking && bookingStatus.length > 0 && (
+        <Tag type="blue">no active Booking</Tag>
+      )}
+      {!isActiveBooking && bookingStatus.length === 0 && (
+        <Tag type="silver">no Booking YET</Tag>
+      )}
       <Modal>
         <Menus.Menu>
           <Menus.Toggle id={guestId}></Menus.Toggle>
           <Menus.List id={guestId}>
-            <Menus.Button
-              icon={<HiClock />}
-              onClick={() => navigate(`/bookingHistory/${guestId}`)}
-            >
-              History
-            </Menus.Button>
+            {bookingStatus.length !== 0 && (
+              <Menus.Button
+                icon={<HiClock />}
+                onClick={() => navigate(`/bookingHistory/${guestId}`)}
+              >
+                History
+              </Menus.Button>
+            )}
             <Menus.Button
               icon={<HiOutlinePencil />}
               // onClick={() => navigate(`/checkin/${bookingId}`)}
