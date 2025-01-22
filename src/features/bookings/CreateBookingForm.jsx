@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useQueryClient } from '@tanstack/react-query';
-import { eachDayOfInterval } from 'date-fns';
+import { eachDayOfInterval, format } from 'date-fns';
 /* eslint-disable react/prop-types */
 import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
@@ -19,11 +19,9 @@ import { useAllGuests } from '../guests/useAllGuests';
 import { useSettings } from '../settings/useSettings';
 import { useFilteredBookings } from './useFilterBookings';
 import { useCreateBooking } from './useCreateBooking';
+import { getTodayDate } from '../../utils/helpers';
 
 function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
-
-
-  
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
   const queryClient = useQueryClient();
@@ -45,7 +43,7 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
   const { isLoading: isCreatingBookings, createBooking } = useCreateBooking();
   const { isLoading: isLoadingGuests, guests } = useAllGuests();
   const { filteredBookings } = useFilteredBookings(cabinId);
-
+  
   useEffect(() => {
     if (filteredBookings.length === 0) return;
     const inputDates = eachDayOfInterval({
@@ -76,7 +74,6 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
     setIsBooked,
     cabins,
   ]);
-
   function onSubmit(data) {
     const selectedCabin = cabins.filter((cabin) => (cabin.id = cabinId))[0];
     const totalDays = eachDayOfInterval({
@@ -119,6 +116,8 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
           label="name"
           optionValue="id"
           isLoading={isLoadingCabins}
+          placeHolder='select a Cabin'
+
           {...register('cabinId', {
             required: 'please select the cabin',
           })}
@@ -135,6 +134,7 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
         <Input
           type="date"
           id="startDate"
+          min={getTodayDate()}
           {...register('startDate', {
             required: 'Start date is Required',
           })}
@@ -149,7 +149,7 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
         <Input
           type="date"
           id="endDate"
-          min={startDate}
+          min={startDate ||getTodayDate()}
           {...register('endDate', {
             required: 'End date is required ',
           })}
@@ -162,6 +162,7 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
           options={guests}
           optionValue="id"
           label="fullName"
+          placeHolder='select a guest'
           isLoading={isLoadingGuests}
           {...register('guestId', {
             required: 'Please select the guest',

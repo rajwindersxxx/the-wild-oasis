@@ -45,3 +45,7 @@ export function getNoOfDays(startDate, endDate){
   const d2 = new Date(endDate).getTime();
   return d2 - d1
 }
+
+export function getTodayDate(){
+ return  new Date().toISOString().split('T')[0]
+}

@@ -6,7 +6,7 @@ export async function getBookings({ filter, sortBy, page }) {
   let query = supabase
     .from('bookings')
     .select(
-      'id, created_at, startDate, endDate, numNights, numGuests, status , totalPrice, cabins(name) , guests(fullName, email)',
+      'id, created_at, startDate, endDate, numNights, numGuests, status , totalPrice, guestId, cabins(name) , guests(fullName, email)',
       { count: 'exact' }
     );
   // filter
@@ -126,6 +126,7 @@ export async function getStaysTodayActivity() {
 }
 
 export async function updateBooking(id, obj) {
+  console.log(id ,obj)
   const { data, error } = await supabase
     .from('bookings')
     .update(obj)
@@ -151,24 +152,3 @@ export async function deleteBooking(id) {
   return data;
 }
 
-export async function getBusyBookings(bookingStartDate, bookingEndDate) {
-  if (!bookingStartDate || !bookingEndDate)
-    return { message: 'provide start and end Date' };
-  const { data: cabinList, error } = await supabase
-    .from('bookings')
-    .select('cabins(name)')
-    .lte('startDate', `${bookingEndDate} 00:00:00`)
-    .gte('startDate', `bookingStartDate`)
-    .lte('endDate', `${bookingEndDate} 00:00:00`)
-    .gte('endDate', `bookingStartDate`)
-    .or('status.neq.checked-out');
-
-  const allEntries = cabinList.map((data) => data.cabins.name);
-  const data = [...new Set(allEntries)];
-  if (error) {
-    console.error(error);
-    throw new Error('Bookings could not be loaded');
-  }
-  console.log(data);
-  return { data, error };
-}

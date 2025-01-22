@@ -19,8 +19,9 @@ function SelectedGuestDetails({ filterBy, eqTo, guests }) {
   if (!guests) return <SpinnerMini />;
   return (
     <Menus>
-      <Table columns=" 1fr 1fr 1fr 1fr 0.5fr ">
+      <Table columns=" 0.7fr 1fr 1.6fr 1fr 1fr 0.3fr ">
               <Table.Header>
+                <div>Guest Id</div>
                 <div>Guest Name</div>
                 <div>Email</div>
                 <div>NationalId</div>
@@ -43,9 +44,11 @@ function SelectedGuestRow({ guest }) {
     nationalID,
     nationality,
     countryFlag,
+    id:guestId
   } = guest;
   return (
     <Table.Row>
+      <div>#{guestId}</div>
       <div>{fullName}</div>
       <div>{email}</div>
       <div>{nationalID}</div>

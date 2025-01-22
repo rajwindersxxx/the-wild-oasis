@@ -1,13 +1,30 @@
 import supabase, { supabaseUrl } from './supabase';
+import { PAGE_SIZE } from '../utils/constants';
 
-export async function getCabins() {
-  let query = supabase.from('cabins').select('*');
-  const { data, error } = await query;
+export async function getCabins({ filter, sortBy, page }) {
+  let query = supabase.from('cabins').select('*', { count: 'exact' });
+
+  if (filter) {
+    query = query[filter.method || 'eq'](filter.field, filter.value);
+  }
+
+  if (sortBy)
+    query = query.order(sortBy.field, {
+      ascending: sortBy.direction === 'asc',
+    });
+
+  if (page) {
+    const from = (page - 1) * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+    query = query.range(from, to);
+  }
+
+  const { data, error, count } = await query;
   if (error) {
     console.error(error);
     throw new Error('Cabins could not be loaded');
   }
-  return data;
+  return { data, count };
 }
 export async function createEditCabin(newCabin, id) {
   const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);

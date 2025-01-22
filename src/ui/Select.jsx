@@ -25,13 +25,14 @@ function Select({
   detail,
   isLoading,
   onChange,
+  placeHolder,
   ...props
 }) {
   if (isLoading) return <SpinnerMini />;
 
   return (
     <StyledSelect value={value} onChange={onChange} {...props}>
-      <option value="">Select</option>
+    {placeHolder &&  <option value="">{placeHolder}</option>}
       {optionValue &&
         label &&
         options.map((option) => (

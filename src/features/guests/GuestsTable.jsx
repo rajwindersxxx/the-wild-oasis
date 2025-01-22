@@ -11,9 +11,9 @@ function GuestsTable() {
   if (isLoading) return <Spinner />;
   return (
     <Menus>
-      <Table columns=" 0.6fr 1fr 1.5fr 1fr 1fr 0.3fr 1fr">
+      <Table columns=" 0.7fr 1fr 1.5fr 1fr 1fr 0.3fr 1fr 0.3fr">
         <Table.Header>
-          <div>booking id</div>
+          <div>Guest id</div>
           <div>Guest Name</div>
           <div>Email</div>
           <div>NationalId</div>

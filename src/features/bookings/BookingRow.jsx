@@ -40,6 +40,9 @@ const Stacked = styled.div`
     color: var(--color-grey-500);
     font-size: 1.2rem;
   }
+  & > span > span {
+
+  }
 `;
 
 const Amount = styled.div`
@@ -50,11 +53,10 @@ const Amount = styled.div`
 function BookingRow({
   booking: {
     id: bookingId,
-    created_at,
+    guestId,
     startDate,
     endDate,
     numNights,
-    numGuests,
     totalPrice,
     status,
     guests: { fullName: guestName, email },
@@ -74,7 +76,9 @@ function BookingRow({
       <Cabin>{cabinName}</Cabin>
 
       <Stacked>
-        <span>{guestName}</span>
+        <span>
+          {guestName} <span>( #{guestId})</span>
+        </span>
         <span>{email}</span>
       </Stacked>
 
