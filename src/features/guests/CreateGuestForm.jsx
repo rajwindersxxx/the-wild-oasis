@@ -9,14 +9,15 @@ import { useCreateGuest } from './useCreateGuest';
 import Select from '../../ui/Select';
 import { useCountries } from './useCountries';
 import { useUpdateGuest } from './useUpdateGuest';
+import toast from 'react-hot-toast';
 
-function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
+function CreateGuestForm({ guestToEdit = {}, onCloseModal }) {
   const { createGuest, isCreating } = useCreateGuest();
   const { updateGuest, isUpdating } = useUpdateGuest();
 
   const isWorking = isUpdating || isCreating;
   const { countriesList, isLoading } = useCountries();
-  const { id: editId, ...editValues } = cabinToEdit;
+  const { id: editId, ...editValues } = guestToEdit;
   const isEditSession = Boolean(editId);
   const { register, handleSubmit, reset, formState, watch } = useForm({
     defaultValues: isEditSession ? editValues : {},
@@ -39,6 +40,7 @@ function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
           onSuccess: () => {
             reset();
             onCloseModal?.();
+            toast.success('Guest Details updated successfully');
           },
         }
       );
@@ -47,6 +49,7 @@ function CreateGuestForm({ cabinToEdit = {}, onCloseModal }) {
         onSuccess: () => {
           reset();
           onCloseModal?.();
+          toast.success('Guest Created successfully');
         },
       });
   }

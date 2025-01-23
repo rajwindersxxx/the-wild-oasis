@@ -20,9 +20,12 @@ import { useSettings } from '../settings/useSettings';
 import { useFilteredBookings } from './useFilterBookings';
 import { useCreateBooking } from './useCreateBooking';
 import { getTodayDate } from '../../utils/helpers';
+import { destructureBookingsForEdit } from '../../utils/bookingUtils';
+import toast from 'react-hot-toast';
 
-function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
-  const { id: editId, ...editValues } = cabinToEdit;
+function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
+  const editData = destructureBookingsForEdit(bookingToEdit);
+  const { id: editId, ...editValues } = editData;
   const isEditSession = Boolean(editId);
   const queryClient = useQueryClient();
   const { register, handleSubmit, reset, formState, watch } = useForm({
@@ -43,36 +46,41 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
   const { isLoading: isCreatingBookings, createBooking } = useCreateBooking();
   const { isLoading: isLoadingGuests, guests } = useAllGuests();
   const { filteredBookings } = useFilteredBookings(cabinId);
-  
+
   useEffect(() => {
-    if (filteredBookings.length === 0) return;
-    const inputDates = eachDayOfInterval({
-      start: new Date(startDate),
-      end: new Date(endDate),
-    });
-    const bookedDatesList = filteredBookings
-      .map((item) =>
-        eachDayOfInterval({
-          start: new Date(item.startDate),
-          end: new Date(item.endDate),
-        })
-      )
-      .flat();
-    const result = inputDates.filter((date) => {
-      return bookedDatesList.some(
-        (outputDate) => outputDate.getTime() === date.getTime()
-      );
-    });
-    setIsBooked(result.length !== 0);
+    if (filteredBookings.length !== 0 && cabinId !== editData.cabinId) {
+      const inputDates = eachDayOfInterval({
+        start: new Date(startDate),
+        end: new Date(endDate),
+      });
+      const bookedDatesList = filteredBookings
+        .map((item) =>
+          eachDayOfInterval({
+            start: new Date(item.startDate),
+            end: new Date(item.endDate),
+          })
+        )
+        .flat();
+      const result = inputDates.filter((date) => {
+        return bookedDatesList.some(
+          (outputDate) => outputDate.getTime() === date.getTime()
+        );
+      });
+      setIsBooked(result.length !== 0);
+    } else {
+      setIsBooked(false);
+    }
+
     queryClient.invalidateQueries(['filteredBookings']);
   }, [
     startDate,
     endDate,
     filteredBookings,
-    cabinId,
     queryClient,
     setIsBooked,
     cabins,
+    cabinId,
+    editData.cabinId,
   ]);
   function onSubmit(data) {
     const selectedCabin = cabins.filter((cabin) => (cabin.id = cabinId))[0];
@@ -93,12 +101,30 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
       totalPrice: cabinPrice + extraPrice,
     };
     const finalData = { ...data, ...newObject };
-    createBooking(finalData, {
-      onSuccess: () => {
-        reset();
-        onCloseModal?.();
-      },
-    });
+
+    if (isEditSession) {
+      createBooking(
+        { finalData, id: editId },
+        {
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+            toast.success('Booking updated Successfully');
+          },
+        }
+      );
+    } else {
+      createBooking(
+        { finalData },
+        {
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+            toast.success('New Booking has created successfully');
+          },
+        }
+      );
+    }
   }
   function onError(errors) {
     console.log(errors);
@@ -116,8 +142,7 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
           label="name"
           optionValue="id"
           isLoading={isLoadingCabins}
-          placeHolder='select a Cabin'
-
+          placeHolder="select a Cabin"
           {...register('cabinId', {
             required: 'please select the cabin',
           })}
@@ -134,6 +159,7 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
         <Input
           type="date"
           id="startDate"
+          disabled={isEditSession}
           min={getTodayDate()}
           {...register('startDate', {
             required: 'Start date is Required',
@@ -149,10 +175,11 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
         <Input
           type="date"
           id="endDate"
-          min={startDate ||getTodayDate()}
+          min={startDate || getTodayDate()}
           {...register('endDate', {
             required: 'End date is required ',
           })}
+          disabled={isEditSession}
         />
       </FormRow>
 
@@ -162,7 +189,7 @@ function CreateBookingForm({ cabinToEdit = {}, onCloseModal }) {
           options={guests}
           optionValue="id"
           label="fullName"
-          placeHolder='select a guest'
+          placeHolder="select a guest"
           isLoading={isLoadingGuests}
           {...register('guestId', {
             required: 'Please select the guest',

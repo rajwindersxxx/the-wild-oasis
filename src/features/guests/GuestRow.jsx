@@ -7,7 +7,6 @@ import Tag from '../../ui/Tag';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 import { useDeleteGuest } from './useDeleteGuest';
 import { useNavigate } from 'react-router-dom';
-import CreateCabinForm from '../cabins/CreateCabinForm';
 import CreateGuestForm from './CreateGuestForm';
 
 /* eslint-disable react/prop-types */
@@ -71,7 +70,7 @@ function GuestRow({ guest }) {
           </Menus.List>
         </Menus.Menu>
         <Modal.Window name={`edit`}>
-          <CreateGuestForm cabinToEdit={guest} />
+          <CreateGuestForm guestToEdit={guest} />
         </Modal.Window>
         <Modal.Window name={'delete'}>
           <ConfirmDelete

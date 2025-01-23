@@ -49,3 +49,4 @@ export function getNoOfDays(startDate, endDate){
 export function getTodayDate(){
  return  new Date().toISOString().split('T')[0]
 }
+//  function is used to create Edit booking Object 

@@ -9,6 +9,7 @@ import Textarea from '../../ui/Textarea';
 import { useForm } from 'react-hook-form';
 import { useCreateCabin } from './useCreateCabin';
 import { useUpdateCabin } from './useUpdateCabin';
+import toast from 'react-hot-toast';
 
 function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   const { isCreating, createCabin } = useCreateCabin();
@@ -32,6 +33,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
           onSuccess: () => {
             reset();
             onCloseModal?.();
+            toast.success('Cabin updated Successfully');
           },
         }
       );
@@ -42,6 +44,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
           onSuccess: () => {
             reset();
             onCloseModal?.();
+            toast.success('New cabin successfully created');
           },
         }
       );
@@ -50,7 +53,10 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
     // console.log(errors);
   }
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal': 'regular'}>
+    <Form
+      onSubmit={handleSubmit(onSubmit, onError)}
+      type={onCloseModal ? 'modal' : 'regular'}
+    >
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"

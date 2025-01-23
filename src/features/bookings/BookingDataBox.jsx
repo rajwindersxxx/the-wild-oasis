@@ -194,13 +194,10 @@ function BookingDataBox({ booking }) {
         {checkInTime && (
           <p>Arrived on {format(new Date(checkInTime), 'EEE, MMM dd yyyy, p')}</p>
         )}
-        {!checkInTime && (
-          <Tag type='blue'> Active Booking</Tag>
-        )}
         {checkOutTime && (
           <p>Leave on {format(new Date(checkOutTime), 'EEE, MMM dd yyyy, p')}</p>
         )}
-        {!checkOutTime && (
+        {(!checkOutTime || !checkInTime) && (
           <Tag type='blue'> Active</Tag>
         )}
       </Footer>

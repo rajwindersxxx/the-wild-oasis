@@ -27,7 +27,6 @@ export async function getGuests({ filter, sortBy, page }) {
 }
 
 export async function createEditGuest(guestData, id) {
-  console.log(guestData)
   const createGuestEntry = {
     ...guestData,
     countryFlag: `https://flagcdn.com/${guestData.countryCode.toLowerCase()}.svg`,
