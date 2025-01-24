@@ -11,8 +11,9 @@ import Select from '../../ui/Select';
 import Checkbox from '../../ui/Checkbox';
 import Textarea from '../../ui/Textarea';
 import SpinnerMini from '../../ui/SpinnerMini';
-import SelectedGuestDetails from './SelectedGuestDetails';
-import SelectedCabinDetails from './SelectedCabinDetails';
+import SelectedGuestDetails from '../../ui/SelectedGuestDetails';
+import SelectedCabinDetails from '../../ui/SelectedCabinDetails';
+import TotalBookingCost from '../../ui/TotalBookingCost';
 
 import { useCabins } from '../cabins/useCabins';
 import { useAllGuests } from '../guests/useAllGuests';
@@ -22,7 +23,6 @@ import { useCreateBooking } from './useCreateBooking';
 import { getTodayDate } from '../../utils/helpers';
 import { destructureBookingsForEdit } from '../../utils/bookingUtils';
 import toast from 'react-hot-toast';
-import TotalBookingCost from './TotalBookingCost';
 
 function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
   const editData = destructureBookingsForEdit(bookingToEdit);

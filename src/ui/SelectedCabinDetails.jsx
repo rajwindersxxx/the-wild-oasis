@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useMemo } from 'react';
-import Menus from '../../ui/Menus';
-import SpinnerMini from '../../ui/SpinnerMini';
-import Table from '../../ui/Table';
-import { formatCurrency } from '../../utils/helpers';
+import Menus from './Menus';
+import SpinnerMini from './SpinnerMini';
+import Table from './Table';
+import { formatCurrency } from '../utils/helpers';
 import styled from 'styled-components';
 import uuid4 from 'uuid4';
 

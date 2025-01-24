@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import uuid4 from 'uuid4';
-import { Flag } from '../../ui/Flag';
-import Menus from '../../ui/Menus';
-import SpinnerMini from '../../ui/SpinnerMini';
-import Table from '../../ui/Table';
+import { Flag } from './Flag';
+import Menus from './Menus';
+import SpinnerMini from './SpinnerMini';
+import Table from './Table';
 import { useMemo } from 'react';
 import styled from 'styled-components';
 const StyledDev = styled.div`

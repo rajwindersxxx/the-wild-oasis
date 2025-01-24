@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import uuid4 from 'uuid4';
-import Menus from '../../ui/Menus';
-import Table from '../../ui/Table';
+import Menus from './Menus';
+import Table from './Table';
 import { useMemo } from 'react';
-import { formatCurrency } from '../../utils/helpers';
+import { formatCurrency } from '../utils/helpers';
 import styled from 'styled-components';
 const StyledDev = styled.div`
   text-align: center;
