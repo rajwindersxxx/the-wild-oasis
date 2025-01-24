@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useQueryClient } from '@tanstack/react-query';
-import { eachDayOfInterval, format } from 'date-fns';
+import { eachDayOfInterval } from 'date-fns';
 /* eslint-disable react/prop-types */
 import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
@@ -22,6 +22,7 @@ import { useCreateBooking } from './useCreateBooking';
 import { getTodayDate } from '../../utils/helpers';
 import { destructureBookingsForEdit } from '../../utils/bookingUtils';
 import toast from 'react-hot-toast';
+import TotalBookingCost from './TotalBookingCost';
 
 function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
   const editData = destructureBookingsForEdit(bookingToEdit);
@@ -45,8 +46,10 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
   const { isLoading: isLoadingCabins, cabins } = useCabins();
   const { isLoading: isCreatingBookings, createBooking } = useCreateBooking();
   const { isLoading: isLoadingGuests, guests } = useAllGuests();
+  const [selectedCabin, setSelectedCabin] = useState([]);
+  const [selectedGuest, setSelectedGuest] = useState([]);
+  const [totalBookingCost, setTotalBookingCost] = useState();
   const { filteredBookings } = useFilteredBookings(cabinId);
-
   useEffect(() => {
     if (filteredBookings.length !== 0 && cabinId !== editData.cabinId) {
       const inputDates = eachDayOfInterval({
@@ -82,25 +85,51 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
     cabinId,
     editData.cabinId,
   ]);
-  function onSubmit(data) {
-    const selectedCabin = cabins.filter((cabin) => (cabin.id = cabinId))[0];
+  useEffect(() => {
+    const selectedCabin = cabins?.filter(
+      (data) => data.id === Number(cabinId)
+    )[0];
+    if (!selectedCabin) return;
     const totalDays = eachDayOfInterval({
-      start: new Date(data.startDate),
-      end: new Date(data.endDate),
+      start: new Date(startDate),
+      end: new Date(endDate),
     }).length;
-    const cabinPrice =
-      selectedCabin.regularPrice * totalDays - selectedCabin.discount;
-    const extraPrice = data.hasBreakfast
-      ? settings.breakfastPrice * totalDays
-      : 0;
-    const newObject = {
-      numNights: totalDays,
+
+    const extraPrice = hasBreakfast ? settings.breakfastPrice * totalDays : 0;
+    const bookingCost = {
       numGuests: selectedCabin.maxCapacity,
-      cabinPrice: cabinPrice,
+      cabinPrice: selectedCabin.regularPrice,
       extrasPrice: extraPrice,
-      totalPrice: cabinPrice + extraPrice,
+      numNights: totalDays - 1,
+      totalPrice:
+        (selectedCabin.regularPrice + extraPrice) * totalDays -
+        selectedCabin.discount,
+      discount: selectedCabin.discount,
+      startDate,
+      endDate,
     };
-    const finalData = { ...data, ...newObject };
+    setTotalBookingCost(bookingCost);
+    setSelectedCabin(selectedCabin);
+  }, [
+    cabinId,
+    cabins,
+    endDate,
+    hasBreakfast,
+    settings?.breakfastPrice,
+    startDate,
+  ]);
+
+  useEffect(() => {
+    const selectedGuest = guests?.filter(
+      (data) => data.id === Number(guestId)
+    )[0];
+    setSelectedGuest(selectedGuest);
+  }, [guestId, guests]);
+
+  function onSubmit(data) {
+
+    delete totalBookingCost.discount;
+    const finalData = { ...data, ...totalBookingCost };
 
     if (isEditSession) {
       createBooking(
@@ -152,7 +181,7 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
         <SelectedCabinDetails
           filterBy={'id'}
           eqTo={Number(cabinId)}
-          cabins={cabins}
+          cabins={selectedCabin}
         />
       )}
       <FormRow label="Start Date" error={errors?.startDate?.message}>
@@ -161,8 +190,11 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
           id="startDate"
           disabled={isEditSession}
           min={getTodayDate()}
+          max={endDate}
           {...register('startDate', {
             required: 'Start date is Required',
+            min: getTodayDate(),
+            max: endDate,
           })}
         />
       </FormRow>
@@ -177,7 +209,8 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
           id="endDate"
           min={startDate || getTodayDate()}
           {...register('endDate', {
-            required: 'End date is required ',
+            required: 'End date is required',
+            min: startDate || getTodayDate(),
           })}
           disabled={isEditSession}
         />
@@ -200,7 +233,7 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
         <SelectedGuestDetails
           filterBy="id"
           eqTo={Number(guestId)}
-          guests={guests}
+          guests={selectedGuest}
         />
       )}
       <FormRow
@@ -227,6 +260,7 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
           {...register('observations')}
         />
       </FormRow>
+      {!isBooked && <TotalBookingCost bookingCost={totalBookingCost} />}
       <FormRow>
         <Button
           $variation="secondary"

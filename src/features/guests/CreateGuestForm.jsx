@@ -12,27 +12,30 @@ import { useUpdateGuest } from './useUpdateGuest';
 import toast from 'react-hot-toast';
 
 function CreateGuestForm({ guestToEdit = {}, onCloseModal }) {
-  const { createGuest, isCreating } = useCreateGuest();
-  const { updateGuest, isUpdating } = useUpdateGuest();
-
-  const isWorking = isUpdating || isCreating;
-  const { countriesList, isLoading } = useCountries();
   const { id: editId, ...editValues } = guestToEdit;
   const isEditSession = Boolean(editId);
-  const { register, handleSubmit, reset, formState, watch } = useForm({
+  const { createGuest, isCreating } = useCreateGuest();
+  const { updateGuest, isUpdating } = useUpdateGuest();
+  const { countriesList, isLoading } = useCountries();
+  const isWorking = isUpdating || isCreating;
+  const { register, handleSubmit, reset, formState } = useForm({
     defaultValues: isEditSession ? editValues : {},
   });
-  const [code] = watch(['countryCode']);
-  console.log(code);
+
   const { errors } = formState;
 
   function onSubmit(data) {
+    const selectedCountryLabel = document
+      .querySelector('#countryCode')
+      .selectedOptions[0].text.slice(0, -5);
+    const finalData = { ...data, nationality: selectedCountryLabel };
     delete data.bookings;
+
     if (isEditSession)
       updateGuest(
         {
           newGuestData: {
-            ...data,
+            ...finalData,
           },
           id: editId,
         },
@@ -45,7 +48,7 @@ function CreateGuestForm({ guestToEdit = {}, onCloseModal }) {
         }
       );
     else
-      createGuest(data, {
+      createGuest(finalData, {
         onSuccess: () => {
           reset();
           onCloseModal?.();
@@ -98,22 +101,22 @@ function CreateGuestForm({ guestToEdit = {}, onCloseModal }) {
         />
       </FormRow>
 
-      <FormRow label="Nationality" error={errors?.nationality?.message}>
+      <FormRow label="Nationality" error={errors?.countryCode?.message}>
         <Select
-          id="nationality"
+          id="countryCode"
           label="countryName"
-          optionValue="countryName"
+          optionValue="countryCode"
           detail="countryCode"
           isLoading={isLoading}
           disabled={isWorking}
           options={countriesList}
           placeHolder="Select a Country"
-          {...register('nationality', {
+          {...register('countryCode', {
             required: true,
           })}
         />
       </FormRow>
-      <FormRow label="Country Code" error={errors?.countryCode?.message}>
+      {/* <FormRow label="Country Code" error={errors?.countryCode?.message}>
         <Select
           id="countryCode"
           optionValue="countryCode"
@@ -124,7 +127,7 @@ function CreateGuestForm({ guestToEdit = {}, onCloseModal }) {
           placeHolder="Select a Country Code"
           {...register('countryCode', { required: true })}
         />
-      </FormRow>
+      </FormRow> */}
       <FormRow>
         {/* type is an HTML attribute! */}
         <Button

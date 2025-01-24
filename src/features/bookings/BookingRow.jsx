@@ -134,9 +134,9 @@ function BookingRow({ booking }) {
                 </Menus.Button>
               </Modal.Open>
             )}
-            <Modal.Open opens={'delete'}>
+            {status !== 'checked-in' && <Modal.Open opens={'delete'}>
               <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
-            </Modal.Open>
+            </Modal.Open>}
           </Menus.List>
         </Menus.Menu>
         <Modal.Window name={'edit'}>

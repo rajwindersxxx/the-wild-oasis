@@ -19,6 +19,8 @@ export const bookings = [
       'I have a gluten allergy and would like to request a gluten-free breakfast.',
     isPaid: false,
     numGuests: 1,
+    checkInTime: fromToday(0),
+    checkOutTime: fromToday(7),
   },
   {
     created_at: fromToday(-33, true),
@@ -30,6 +32,8 @@ export const bookings = [
     observations: '',
     isPaid: true,
     numGuests: 2,
+    checkInTime: fromToday(-23),
+    checkOutTime: fromToday(-13),
   },
   {
     created_at: fromToday(-27, true),
@@ -54,6 +58,8 @@ export const bookings = [
     observations: '',
     isPaid: true,
     numGuests: 2,
+    checkInTime: fromToday(-45),
+    checkOutTime: fromToday(-29),
   },
   {
     created_at: fromToday(-2, true),
@@ -89,6 +95,8 @@ export const bookings = [
     observations: '',
     isPaid: true,
     numGuests: 4,
+    checkInTime: fromToday(-25),
+    checkOutTime: fromToday(-20),
   },
   {
     created_at: fromToday(-2, true),
@@ -100,6 +108,8 @@ export const bookings = [
     observations: 'We will be bringing our small dog with us',
     isPaid: true,
     numGuests: 3,
+    checkInTime: fromToday(-2),
+    checkOutTime: fromToday(0),
   },
   {
     created_at: fromToday(-14, true),
@@ -111,6 +121,8 @@ export const bookings = [
     observations: '',
     isPaid: true,
     numGuests: 4,
+    checkInTime: fromToday(-14),
+    checkOutTime: fromToday(-11),
   },
 
   // CABIN 004
@@ -124,6 +136,8 @@ export const bookings = [
     observations: '',
     isPaid: true,
     numGuests: 4,
+    checkInTime: fromToday(-4),
+    checkOutTime: fromToday(8),
   },
   {
     created_at: fromToday(-1, true),
@@ -170,6 +184,8 @@ export const bookings = [
     observations: '',
     isPaid: true,
     numGuests: 4,
+    checkInTime: fromToday(-6),
+    checkOutTime: fromToday(-4),
   },
   {
     created_at: fromToday(-4, true),
@@ -181,6 +197,8 @@ export const bookings = [
     observations: '',
     isPaid: true,
     numGuests: 6,
+    checkInTime: fromToday(-4),
+    checkOutTime: fromToday(-1),
   },
 
   // CABIN 006
@@ -195,6 +213,8 @@ export const bookings = [
       "We will be checking in late, around midnight. Hope that's okay :)",
     isPaid: true,
     numGuests: 6,
+    checkInTime: fromToday(0),
+    checkOutTime: fromToday(11),
   },
   {
     created_at: fromToday(-16, true),
@@ -206,6 +226,8 @@ export const bookings = [
     observations: 'I will need a rollaway bed for one of the guests',
     isPaid: true,
     numGuests: 4,
+    checkInTime: fromToday(-16),
+    checkOutTime: fromToday(-9),
   },
   {
     created_at: fromToday(-18, true),
@@ -217,6 +239,8 @@ export const bookings = [
     observations: '',
     isPaid: true,
     numGuests: 6,
+    checkInTime: fromToday(-4),
+    checkOutTime: fromToday(-1),
   },
 
   // CABIN 007
@@ -266,6 +290,8 @@ export const bookings = [
       'My wife has a gluten allergy so I would like to request a gluten-free breakfast if possible',
     isPaid: true,
     numGuests: 9,
+    checkInTime: fromToday(-5),
+    checkOutTime: fromToday(0),
   },
   {
     created_at: fromToday(0, true),
@@ -278,6 +304,8 @@ export const bookings = [
       'I am celebrating my anniversary, can you arrange for any special amenities or decorations?',
     isPaid: true,
     numGuests: 10,
+    checkInTime: fromToday(0),
+    checkOutTime: fromToday(5),
   },
   {
     created_at: fromToday(-10, true),

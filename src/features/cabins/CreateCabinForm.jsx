@@ -10,19 +10,21 @@ import { useForm } from 'react-hook-form';
 import { useCreateCabin } from './useCreateCabin';
 import { useUpdateCabin } from './useUpdateCabin';
 import toast from 'react-hot-toast';
+import { useSettings } from '../settings/useSettings';
 
 function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   const { isCreating, createCabin } = useCreateCabin();
   const { isUpdating, updateCabin } = useUpdateCabin();
+  const { settings } = useSettings();
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
   const { register, handleSubmit, reset, getValues, formState } = useForm({
     defaultValues: isEditSession ? editValues : {},
   });
   const { errors } = formState;
-  console.log(errors);
 
   const isWorking = isCreating || isUpdating;
+  const maxCapacity = settings?.maxGuestPerBooking;
 
   function onSubmit(data) {
     const image = typeof data.image === 'string' ? data.image : data.image[0];
@@ -76,8 +78,12 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
           {...register('maxCapacity', {
             required: 'This field is required',
             min: {
-              value: 1,
-              message: 'capacity should be at least 1',
+              value: 0,
+              message: `capacity should be attest 1 `,
+            },
+            max: {
+              value: maxCapacity,
+              message: `capacity should be less then ${maxCapacity}`,
             },
           })}
         />

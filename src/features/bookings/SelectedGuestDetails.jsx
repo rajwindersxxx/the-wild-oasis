@@ -4,37 +4,38 @@ import { Flag } from '../../ui/Flag';
 import Menus from '../../ui/Menus';
 import SpinnerMini from '../../ui/SpinnerMini';
 import Table from '../../ui/Table';
-import { useEffect, useState } from 'react';
-
-function SelectedGuestDetails({ filterBy, eqTo, guests }) {
-  const [selectedGuest, setSelectedGuest] = useState([]);
-  useEffect(() => {
-    if (!guests) return;
-    const selectedGuest = guests.filter(
-      (data) => data[filterBy] === eqTo
+import { useMemo } from 'react';
+import styled from 'styled-components';
+const StyledDev = styled.div`
+  text-align: center;
+`;
+function SelectedGuestDetails({ guests }) {
+  const memoizedGuests = useMemo(() => {
+    const guestToArray = [guests];
+    if (!guests) return <SpinnerMini />;
+    return (
+      <StyledDev>
+        <Menus>
+          <Table columns=" 0.7fr 1fr 1.6fr 1fr 1fr 0.3fr ">
+            <Table.Header>
+              <div>Guest Id</div>
+              <div>Guest Name</div>
+              <div>Email</div>
+              <div>NationalId</div>
+              <div>Nationality</div>
+              <div>Flag</div>
+            </Table.Header>
+            <Table.Body
+              data={guestToArray}
+              render={(guest) => <SelectedGuestRow guest={guest} key={uuid4()} />}
+            />
+          </Table>
+        </Menus>
+      </StyledDev>
     );
-    return setSelectedGuest(selectedGuest);
-  }, [guests, filterBy, eqTo]);
+  }, [guests]);
 
-  if (!guests) return <SpinnerMini />;
-  return (
-    <Menus>
-      <Table columns=" 0.7fr 1fr 1.6fr 1fr 1fr 0.3fr ">
-              <Table.Header>
-                <div>Guest Id</div>
-                <div>Guest Name</div>
-                <div>Email</div>
-                <div>NationalId</div>
-                <div>Nationality</div>
-                <div>Flag</div>
-              </Table.Header>
-        <Table.Body
-          data={selectedGuest}
-          render={(guest) => <SelectedGuestRow guest={guest} key={uuid4()} />}
-        />
-      </Table>
-    </Menus>
-  );
+  return memoizedGuests;
 }
 
 function SelectedGuestRow({ guest }) {

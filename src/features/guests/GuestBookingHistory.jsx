@@ -54,19 +54,19 @@ function GuestBookingHistory() {
 
   return (
     <StyledGrid>
-        <HeadingGroup>
-          <Heading as="h1">Booking History of {guestName}</Heading>
-          <Heading as="h1"> #{guestId}</Heading>
-        </HeadingGroup>
-        {/* <ButtonText onClick={moveBack}>&larr; Back</ButtonText> */}
+      <HeadingGroup>
+        <Heading as="h1">Booking History of {guestName}</Heading>
+        <Heading as="h1"> #{guestId}</Heading>
+      </HeadingGroup>
+      {/* <ButtonText onClick={moveBack}>&larr; Back</ButtonText> */}
 
       {bookingHistory?.map((booking) => {
         return <BookingDataBox booking={booking} key={uuid4()} />;
       })}
 
       <ButtonGroup>
-        <Button $variation="primary" onClick={moveBack}>
-          go Back
+        <Button $variation="secondary" onClick={moveBack}>
+          Back
         </Button>
       </ButtonGroup>
     </StyledGrid>

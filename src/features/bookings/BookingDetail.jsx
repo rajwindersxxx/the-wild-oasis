@@ -11,7 +11,6 @@ import Spinner from '../../ui/Spinner';
 
 import { useMoveBack } from '../../hooks/useMoveBack';
 import { useBooking } from './useBooking';
-import {  HiArrowUpOnSquare } from 'react-icons/hi2';
 import {  useNavigate } from 'react-router-dom';
 import { useCheckout } from '../check-in-out/useCheckout';
 import Modal from '../../ui/Modal';
@@ -62,7 +61,6 @@ function BookingDetail() {
         )}
         {status === 'checked-in' && (
           <Button
-            icon={<HiArrowUpOnSquare />}
             onClick={() => checkout({ bookingId })}
             disabled={isCheckingOut}
           >

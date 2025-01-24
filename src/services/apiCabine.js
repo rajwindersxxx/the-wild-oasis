@@ -2,7 +2,9 @@ import supabase, { supabaseUrl } from './supabase';
 import { PAGE_SIZE } from '../utils/constants';
 
 export async function getCabins({ filter, sortBy, page }) {
-  let query = supabase.from('cabins').select('*', { count: 'exact' });
+  let query = supabase
+    .from('cabins')
+    .select('*, bookings(status)', { count: 'exact' });
 
   if (filter) {
     query = query[filter.method || 'eq'](filter.field, filter.value);
@@ -65,12 +67,26 @@ export async function createEditCabin(newCabin, id) {
   }
   return data;
 }
-export async function deleteCabin(id) {
-  const { data, error } = await supabase.from('cabins').delete().eq('id', id);
+export async function deleteCabin(cabin) {
+  const id = cabin.id;
+  const imageName = cabin.image.split('/').slice(-1);
+  const { error: deleteImageError } = await supabase.storage
+    .from('cabin-images')
+    .remove(imageName);
 
-  if (error) {
-    console.error(error);
+  const { data, error: deleteEntryError } = await supabase
+    .from('cabins')
+    .delete()
+    .eq('id', id);
+    
+  if (deleteEntryError) {
+    console.error(deleteEntryError);
     throw new Error('Cabins could not be deleted');
   }
+  if (deleteImageError) {
+    console.error(deleteImageError);
+    throw new Error('Cabins could not be deleted');
+  }
+
   return data;
 }

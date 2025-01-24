@@ -9,6 +9,7 @@ import Modal from '../../ui/Modal';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 import Table from '../../ui/Table';
 import Menus from '../../ui/Menus';
+import Tag from '../../ui/Tag';
 
 const Img = styled.img`
   display: block;
@@ -48,7 +49,9 @@ function CabinRow({ cabin }) {
     discount,
     image,
     description,
+    bookings,
   } = cabin;
+  const noOfBookings = bookings.length;
   function handleDuplicate() {
     createCabin({
       name: `Copy of ${name}`,
@@ -70,21 +73,29 @@ function CabinRow({ cabin }) {
       ) : (
         <span>&mdash;</span>
       )}
+      {noOfBookings === 0 && <Tag type='grey'>NO booking yet</Tag>}
+      {noOfBookings !== 0 && <Tag type='blue'>{noOfBookings} Past bookings</Tag>}
       <div>
         <Modal>
           <Menus.Menu>
             <Menus.Toggle id={cabinId} />
 
             <Menus.List id={cabinId}>
-              <Menus.Button onClick={handleDuplicate} disabled={isCreating} icon={<HiSquare2Stack />}>
+              <Menus.Button
+                onClick={handleDuplicate}
+                disabled={isCreating}
+                icon={<HiSquare2Stack />}
+              >
                 Duplicate
               </Menus.Button>
               <Modal.Open opens={`edit`}>
                 <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
               </Modal.Open>
-              <Modal.Open opens={'delete'}>
-                <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
-              </Modal.Open>
+              {noOfBookings === 0 && (
+                <Modal.Open opens={'delete'}>
+                  <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+                </Modal.Open>
+              )}
             </Menus.List>
           </Menus.Menu>
 
@@ -96,7 +107,7 @@ function CabinRow({ cabin }) {
             <ConfirmDelete
               resourceName={'cabins'}
               disabled={isDeleting}
-              onConfirm={() => deleteCabin(cabinId)}
+              onConfirm={() => deleteCabin(cabin)}
             />
           </Modal.Window>
         </Modal>

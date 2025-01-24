@@ -63,7 +63,6 @@ export async function getBooking(id) {
   return data;
 }
 export async function createEditBooking(newBooking, id) {
-  console.log(newBooking, id)
   let query = supabase.from('bookings');
 
   if (!id) query = query.insert(newBooking);
