@@ -27,6 +27,7 @@ import toast from 'react-hot-toast';
 function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
   const editData = destructureBookingsForEdit(bookingToEdit);
   const { id: editId, ...editValues } = editData;
+
   const isEditSession = Boolean(editId);
   const queryClient = useQueryClient();
   const { register, handleSubmit, reset, formState, watch } = useForm({
@@ -127,7 +128,6 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
   }, [guestId, guests]);
 
   function onSubmit(data) {
-
     delete totalBookingCost.discount;
     const finalData = { ...data, ...totalBookingCost };
 
@@ -155,6 +155,7 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
       );
     }
   }
+
   function onError(errors) {
     console.log(errors);
   }

@@ -2,13 +2,16 @@ import Button from '../../ui/Button';
 import Modal from '../../ui/Modal';
 import CreateGuestForm from './CreateGuestForm';
 import Row from '../../ui/Row';
+import { useNavigate } from 'react-router-dom';
 
 function AddGuest() {
+
+
   return (
     <Modal>
       <Modal.Open opens={'createGuest'}>
           <Row $type="flex-end">
-            <Button>Create a Guest</Button>
+            <Button>Create a Guest</Button> 
           </Row>
       </Modal.Open>
       <Modal.Window name={'createGuest'}>

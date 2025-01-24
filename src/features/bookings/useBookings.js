@@ -1,10 +1,11 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getBookings } from '../../services/apiBookings';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { PAGE_SIZE } from '../../utils/constants';
 export function useBookings() {
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   // Filter
   const filterValue = searchParams.get('status');
   const filter =
@@ -19,7 +20,11 @@ export function useBookings() {
   const sortBy = { field, direction };
 
   //   pagination
-  const page = !searchParams.get('page') ? 1 : Number(searchParams.get('page'));
+  let page ;
+  if (location.pathname === '/bookings') {
+    page = !searchParams.get('page') ? 1 : Number(searchParams.get('page'));
+  }
+
   // query
   const {
     isLoading,

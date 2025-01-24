@@ -1,11 +1,12 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getCabins } from '../../services/apiCabine';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { PAGE_SIZE } from '../../utils/constants';
 
 export function useCabins() {
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
 
   const filterValue = searchParams.get('discount');
   const filter =
@@ -20,8 +21,10 @@ export function useCabins() {
   const sortByRaw = searchParams.get('sortBy') || 'id-desc';
   const [field, direction] = sortByRaw.split('-');
   const sortBy = { field, direction };
-
-  const page = !searchParams.get('page') ? 1 : Number(searchParams.get('page'));
+  let page;
+  if (location.pathname === '/cabins') {
+    page = !searchParams.get('page') ? 1 : Number(searchParams.get('page'));
+  }
 
   const {
     isLoading,

@@ -1,6 +1,13 @@
 import supabase, { supabaseUrl } from './supabase';
 import { PAGE_SIZE } from '../utils/constants';
 
+export async function getAllCabins() {
+  let { data, error } = await supabase
+    .from('cabins')
+    .select('*');
+  return { data, error };
+}
+
 export async function getCabins({ filter, sortBy, page }) {
   let query = supabase
     .from('cabins')
@@ -78,7 +85,7 @@ export async function deleteCabin(cabin) {
     .from('cabins')
     .delete()
     .eq('id', id);
-    
+
   if (deleteEntryError) {
     console.error(deleteEntryError);
     throw new Error('Cabins could not be deleted');
