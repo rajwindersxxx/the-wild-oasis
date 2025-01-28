@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
+import { AnimatePresence, motion } from 'motion/react';
 import { createContext, useContext } from 'react';
 import styled from 'styled-components';
 
-const StyledTable = styled.div`
+const StyledTable = styled(motion.div)`
   border: 1px solid var(--color-grey-200);
 
   font-size: 1.4rem;
@@ -11,7 +12,7 @@ const StyledTable = styled.div`
   overflow: hidden;
 `;
 
-const CommonRow = styled.div`
+const CommonRow = styled(motion.div)`
   display: grid;
   grid-template-columns: ${(props) => props.$columns};
   column-gap: 2.4rem;
@@ -54,7 +55,6 @@ const Footer = styled.footer`
   }
 `;
 
-
 const Empty = styled.p`
   font-size: 1.6rem;
   font-weight: 500;
@@ -65,7 +65,17 @@ const TableContext = createContext();
 function Table({ columns, children }) {
   return (
     <TableContext.Provider value={{ columns }}>
-      <StyledTable $row="table">{children}</StyledTable>
+      <AnimatePresence>
+        <StyledTable
+          $row="table"
+          initial={{ scaleY: 0, transformOrigin: 'top left' }}
+          animate={{ scaleY: 1, transformOrigin: 'top left' }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: [0, 0.71, 0.2, 1.01] }}
+        >
+          {children}
+        </StyledTable>
+      </AnimatePresence>
     </TableContext.Provider>
   );
 }
@@ -80,16 +90,22 @@ function Header({ children }) {
 function Row({ children }) {
   const { columns } = useContext(TableContext);
   return (
-    <StyledRow role="row" $columns={columns}>
-      {children}
-    </StyledRow>
+    <AnimatePresence mode='wait'>
+      <StyledRow
+        role="row"
+        $columns={columns}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        {children}
+      </StyledRow>
+    </AnimatePresence>
   );
 }
 function Body({ data, render }) {
-  if(!data.length) return <Empty>No dat to show at the moment</Empty>
-  return <StyledBody>
-    {data.map(render)}
-  </StyledBody>
+  if (!data.length) return <Empty>No dat to show at the moment</Empty>;
+  return <StyledBody>{data.map(render)}</StyledBody>;
 }
 
 Table.Header = Header;

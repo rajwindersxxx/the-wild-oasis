@@ -14,7 +14,7 @@ export async function getCabins({ filter, sortBy, page }) {
     .select('*, bookings(status)', { count: 'exact' });
 
   if (filter) {
-    query = query[filter.method || 'eq'](filter.field, filter.value);
+    query = query[filter.method || 'eq'](filter.field,filter.value);
   }
 
   if (sortBy)

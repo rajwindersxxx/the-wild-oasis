@@ -32,7 +32,6 @@ export async function createEditGuest(guestData, id) {
     countryFlag: `https://flagcdn.com/${guestData.countryCode.toLowerCase()}.svg`,
   };
   let query = supabase.from('guests');
-
   if (!id) query = query.insert([createGuestEntry]);
   if (id) query = query.update([createGuestEntry]).eq('id', id);
 

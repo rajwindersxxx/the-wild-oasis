@@ -27,7 +27,9 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   const maxCapacity = settings?.maxGuestPerBooking;
 
   function onSubmit(data) {
+    delete data.bookings;
     const image = typeof data.image === 'string' ? data.image : data.image[0];
+
     if (isEditSession)
       updateCabin(
         { newCabinData: { ...data, image }, id: editId },
@@ -52,7 +54,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
       );
   }
   function onError(errors) {
-    // console.log(errors);
+    console.log(errors);
   }
   return (
     <Form

@@ -25,11 +25,11 @@ function CreateGuestForm({ guestToEdit = {}, onCloseModal }) {
   const { errors } = formState;
 
   function onSubmit(data) {
+    delete data.bookings;
     const selectedCountryLabel = document
       .querySelector('#countryCode')
       .selectedOptions[0].text.slice(0, -5);
     const finalData = { ...data, nationality: selectedCountryLabel };
-    delete data.bookings;
 
     if (isEditSession)
       updateGuest(

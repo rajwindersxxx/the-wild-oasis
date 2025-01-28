@@ -1,16 +1,13 @@
 /* eslint-disable react/prop-types */
-import {
-  cloneElement,
-  createContext,
-  useContext,
-  useState,
-} from 'react';
+import { cloneElement, createContext, useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { HiXMark } from 'react-icons/hi2';
 import styled from 'styled-components';
-import {useOutsideClick} from '../hooks/useOutsideClick';
+import { useOutsideClick } from '../hooks/useOutsideClick';
+import { AnimatePresence, motion } from 'motion/react';
+import { easeInOut } from 'motion';
 
-const StyledModal = styled.div`
+const StyledModal = styled(motion.div)`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -19,10 +16,10 @@ const StyledModal = styled.div`
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
   padding: 3.2rem 4rem;
-  transition: all 0.5s;
+  transition: all;
 `;
 
-const Overlay = styled.div`
+const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
   left: 0;
@@ -31,7 +28,7 @@ const Overlay = styled.div`
   background-color: var(--backdrop-color);
   backdrop-filter: blur(4px);
   z-index: 1000;
-  transition: all 0.5s;
+  transition: all;
 `;
 
 const Button = styled.button`
@@ -79,16 +76,30 @@ function Window({ children, name }) {
   const { openName, close } = useContext(ModalContext);
   const ref = useOutsideClick(close);
 
-  if (name !== openName) return null;
   return createPortal(
-    <Overlay>
-      <StyledModal ref={ref}>
-        <Button onClick={close}>
-          <HiXMark />
-        </Button>
-        <div>{cloneElement(children, { onCloseModal: close })}</div>
-      </StyledModal>
-    </Overlay>,
+    <AnimatePresence>
+      {name === openName && (
+        <Overlay
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          key="overlay"
+        >
+          <StyledModal
+            ref={ref}
+            initial={{ scale: 0, opacity: 0, x: '-50%', y: '-50%' }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ type: 'spring', duration: 0.6 }}
+            key="modal"
+          >
+            <Button onClick={close}>
+              <HiXMark />
+            </Button>
+            <div>{cloneElement(children, { onCloseModal: close })}</div>
+          </StyledModal>
+        </Overlay>
+      )}
+    </AnimatePresence>,
     document.body
     // also use document.queryselector
   );
