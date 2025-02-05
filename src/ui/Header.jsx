@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Logout from '../features/authentication/Logout';
 import HeaderMenu from './HeaderMenu';
-import UserAvatar from '../features/authentication/UserAvatar'
+import UserAvatar from '../features/authentication/UserAvatar';
 
 const StyledHeader = styled.header`
   background-color: var(--color-grey-0);
@@ -10,12 +10,12 @@ const StyledHeader = styled.header`
   display: flex;
   gap: 2.4rem;
   align-items: center;
-  justify-content: flex-end
+  justify-content: flex-end;
 `;
 function Header() {
   return (
     <StyledHeader>
-    <UserAvatar/>
+      <UserAvatar />
       <HeaderMenu />
     </StyledHeader>
   );
