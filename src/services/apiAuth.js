@@ -1,3 +1,4 @@
+import { fakeLogin, fakeUser} from '../data/fakeUser';
 import supabase, { supabaseUrl } from './supabase';
 
 export async function signup({ fullName, email, password }) {
@@ -15,20 +16,22 @@ export async function signup({ fullName, email, password }) {
 }
 
 export async function login({ email, password }) {
+  if(email === fakeLogin.username && password === fakeLogin.password) return fakeUser;
   let { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
   if (error) throw new Error(error.message);
+  console.log(data)
   return data;
 }
 export async function getCurrentUser() {
   const { data: session } = await supabase.auth.getSession();
-  if (!session.session) return null;
+  if (!session.session) return fakeUser.user;
 
   const { data, error } = await supabase.auth.getUser();
   if (error) throw new Error(error.message);
-
+  console.log(data)
   return data?.user;
 }
 
