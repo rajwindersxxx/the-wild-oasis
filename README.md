@@ -1,90 +1,92 @@
-# Hotel Management App
+# 🏨 Hotel Management App
 
 ## 📝 Project Overview
 
-This is a **Hotel Management Application** designed for hotel employees to manage cabins, bookings, and guest data efficiently. The app ensures secure access and offers features like user authentication, booking management, statistics, and dark mode.
+This **Hotel Management Application** is designed exclusively for hotel employees to manage cabins, bookings, and guest data efficiently. The app ensures secure access, enabling staff to handle reservations, monitor guest details, and maintain hotel operations smoothly.
 
-## 📝 Note
+## 📌 Note
 
-The core functionality of this project was developed during the course by following the instructor's instructions, including authentication, cabin management, viewing bookings, dashboard, settings, and user management.
+The core functionality of this project was developed as part of a course, following the instructor's guidance. This includes authentication, cabin management, booking management, dashboard, settings, and user management.
 **Additional features have been implemented by me as challenges.**
 
 ## 🛠️ Tech Stack
 
 - **Frontend:** React, React Query
 - **Backend & Database:** Supabase
-- **UI Styling:** Tailwind CSS (or any CSS framework used)
+- **UI Styling:** Tailwind CSS
 
 ## 🎯 Features
 
-### Authentication
+### 🔐 Authentication
 
-- Users must be logged in to access the application.
-- New users can only sign up within the application (to ensure only hotel employees get accounts).
-- Users can update their avatar, name, and password.
+- Only hotel employees can sign up within the application.
+- Secure login required to access the system.
+- Employees can update their avatar, name, and password.
 
-### Cabin Management
+### 🏠 Cabin Management
 
-- **View a table with all cabins, displaying:**
-  - Cabin photo
+- **View all cabins with details:**
+  - Photo
   - Name
   - Capacity
   - Price
-  - Current discount
-- **Add new cabins (with photo upload), update, and delete cabins.**
+  - Discount (if applicable)
+- **Manage cabins:**
+  - Add new cabins (including photo upload)
+  - Edit cabin details
+  - Delete cabins
 
-### Booking Management
+### 📆 Booking Management
 
-- **View a table of all bookings, displaying:**
+- **View all bookings with details:**
   - Arrival & departure dates
   - Booking status ("unconfirmed", "checked in", "checked out")
   - Paid amount
   - Guest and cabin details
-- **Filter bookings based on status.**
 - **Manage bookings:**
+  - Filter by status
   - Delete bookings
   - Check guests in or out
-  - Accept payment confirmation upon check-in
-  - Add breakfast for guests upon check-in (if not pre-selected)
+  - Confirm payments upon check-in
+  - Add breakfast for guests (if not pre-selected)
 - **Additional Features Implemented:**
   - Create new bookings
-  - Edit bookings
-  - Bookings can be created based on minimum and maximum nights 
+  - Edit existing bookings
+  - Bookings follow minimum and maximum night stay rules
 
-### Guest Management
+### 🧑‍💼 Guest Management
 
 - **Guest details include:**
   - Full name
   - Email
   - National ID
   - Nationality (with a country flag for easy identification)
-- **Additional Features Implemented:**
-  - A dedicated Guest Tab where employees can:
-    - View registered guests
-    - Create and remove guests
-    - Edit guest details
-    - Search for guests
-    - View guest booking history
-    - Check the current status of guests
+- **Manage guests:**
+  - View registered guests
+  - Create and remove guest profiles
+  - Edit guest details
+  - Search for guests
+  - View guest booking history
+  - Monitor guest check-in status
 
-### Dashboard
+### 📊 Dashboard
 
-- Overview of key metrics for the last **7, 30, or 90 days**:
-  - List of guests checking in and out on the current day (with quick actions)
+- Overview of hotel metrics for the last **7, 30, or 90 days**:
+  - List of guests checking in and out (with quick actions)
   - Statistics on recent bookings, sales, check-ins, and occupancy rate
-  - Daily hotel sales chart (total sales & extra sales like breakfast)
+  - Daily hotel sales chart (total and extra sales like breakfast)
   - Stay duration statistics chart
 
-### Application Settings
+### ⚙️ Application Settings
 
-- Configurable settings for:
+- Configurable options for:
   - Breakfast price
   - Minimum & maximum nights per booking
   - Maximum guests per booking
 
-### Additional Features
+### 🌙 Dark Mode
 
-- **Dark Mode**: Users can switch between light and dark themes.
+- Employees can switch between light and dark themes for better usability.
 
 ## 🚀 Installation & Setup
 
@@ -130,4 +132,8 @@ Ensure you have the following installed:
    npm run dev
    ```
 
-**Author:** Rajwinder Pal Singh | **GitHub:** [Rajwinder Singh](https://github.com/rajwindersxxx)
+---
+
+**👤 Author:** Rajwinder Pal Singh  
+**🔗 GitHub:** [Rajwinder Singh](https://github.com/rajwindersxxx)
+
